@@ -128,3 +128,8 @@ public class Database {
                  'Semester Spring 2027', 'Requests project support for educational research.', 'ID, transcript',
                  'Rejected', 'Female', 1, 'Committee Review - lower financial priority', 50.23)
                 """);
+        statement.executeUpdate("""
+                UPDATE scholarship_applications
+                SET ai_score=93.30, ai_recommendation='High Priority - critical financial need'
+                WHERE index_number='2023001' AND student_name='Arta Krasniqi'
+                """);
