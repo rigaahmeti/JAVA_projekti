@@ -110,3 +110,8 @@ public class Database {
 
     private static void seedDemoApplications(Statement statement) throws SQLException {
         statement.executeUpdate("""
+         INSERT OR IGNORE INTO scholarship_applications
+                (student_name, index_number, faculty, study_program, study_year, average_grade, family_income,
+                 scholarship_type, email, phone, municipality, ects_credits, household_members, special_category,
+                 scholarship_cycle, motivation, document_summary, status, gender, documents_confirmed, ai_recommendation, ai_score)
+                VALUES
