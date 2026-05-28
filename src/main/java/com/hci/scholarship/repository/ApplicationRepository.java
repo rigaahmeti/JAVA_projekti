@@ -100,3 +100,11 @@ public class ApplicationRepository {
         }
         return list;
     }
+    public int countByStatus(String status) throws SQLException {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM scholarship_applications WHERE status=?")) {
+            ps.setString(1, status);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        }
+    }
