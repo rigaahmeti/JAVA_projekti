@@ -127,3 +127,32 @@ public class ApplicationRepository {
         }
         return result;
     }
+    private ScholarshipApplication map(ResultSet rs) throws SQLException {
+        return new ScholarshipApplication(
+                rs.getInt("id"),
+                rs.getString("student_name"),
+                rs.getString("index_number"),
+                rs.getString("faculty"),
+                rs.getString("study_program"),
+                rs.getInt("study_year"),
+                rs.getDouble("average_grade"),
+                rs.getDouble("family_income"),
+                rs.getString("scholarship_type"),
+                rs.getString("email"),
+                rs.getString("phone"),
+                rs.getString("municipality"),
+                rs.getInt("ects_credits"),
+                rs.getInt("household_members"),
+                rs.getString("special_category"),
+                rs.getString("scholarship_cycle"),
+                rs.getString("motivation"),
+                rs.getString("document_summary"),
+                rs.getString("status"),
+                rs.getString("gender"),
+                rs.getInt("documents_confirmed") == 1,
+                rs.getString("ai_recommendation"),
+                rs.getDouble("ai_score"),
+                rs.getString("created_at")
+        );
+    }
+}
