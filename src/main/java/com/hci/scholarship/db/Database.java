@@ -115,3 +115,7 @@ public class Database {
                  scholarship_type, email, phone, municipality, ects_credits, household_members, special_category,
                  scholarship_cycle, motivation, document_summary, status, gender, documents_confirmed, ai_recommendation, ai_score)
                 VALUES
+                 ('Arta Krasniqi', '2023001', 'FIEK', 'Inxhinieri Kompjuterike', 3, 9.40, 220,
+                 'Excellence and Need', 'arta@student.uni', '+38344111222', 'Prishtine', 120, 5, 'Low-income household',
+                 'Annual 2026/27', 'Strong academic record and financial need.', 'ID, transcript, income proof',
+                 'Approved', 'Female', 1, 'High Priority - critical financial need', 93.30),
