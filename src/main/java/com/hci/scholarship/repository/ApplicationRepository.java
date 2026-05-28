@@ -108,3 +108,14 @@ public class ApplicationRepository {
             }
         }
     }
+    public int countAll() throws SQLException {
+        try (Connection connection = Database.getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM scholarship_applications")) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    public double averageScore() throws SQLException {
+        try (Connection connection = Database.getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT AVG(ai_score) FROM scholarship_applications")) {
+            return rs.next() ? Math.round(rs.getDouble(1) * 100.0) / 100.0 : 0;
+        }
+    }
