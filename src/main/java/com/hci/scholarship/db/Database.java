@@ -133,3 +133,8 @@ public class Database {
                 SET ai_score=93.30, ai_recommendation='High Priority - critical financial need'
                 WHERE index_number='2023001' AND student_name='Arta Krasniqi'
                 """);
+        statement.executeUpdate("""
+                UPDATE scholarship_applications
+                SET ai_score=78.90, ai_recommendation='Recommended - high financial need'
+                WHERE index_number='2022018' AND student_name='Dion Berisha'
+                """);
