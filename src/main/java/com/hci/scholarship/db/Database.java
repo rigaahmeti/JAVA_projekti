@@ -119,3 +119,12 @@ public class Database {
                  'Excellence and Need', 'arta@student.uni', '+38344111222', 'Prishtine', 120, 5, 'Low-income household',
                  'Annual 2026/27', 'Strong academic record and financial need.', 'ID, transcript, income proof',
                  'Approved', 'Female', 1, 'High Priority - critical financial need', 93.30),
+                  ('Dion Berisha', '2022018', 'Fakulteti Ekonomik', 'Menaxhment', 4, 8.20, 340,
+                 'Social Support', 'dion@student.uni', '+38349123456', 'Peje', 168, 6, 'First-generation student',
+                 'Annual 2026/27', 'Needs support to complete the final study year.', 'ID, transcript, income proof',
+                 'Pending', 'Male', 1, 'Recommended - high financial need', 78.90),
+                ('Elira Gashi', '2024042', 'Fakulteti i Edukimit', 'Edukim Fillor', 2, 8.05, 910,
+                 'Research Project', 'elira@student.uni', '+38345101010', 'Gjilan', 60, 3, 'General',
+                 'Semester Spring 2027', 'Requests project support for educational research.', 'ID, transcript',
+                 'Rejected', 'Female', 1, 'Committee Review - lower financial priority', 50.23)
+                """);
