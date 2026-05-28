@@ -79,3 +79,15 @@ public class ApplicationRepository {
         }
         return list;
     }
+    public List<ScholarshipApplication> search(String keyword) throws SQLException {
+        List<ScholarshipApplication> list = new ArrayList<>();
+        String sql = """
+                SELECT * FROM scholarship_applications
+                WHERE student_name LIKE ? OR index_number LIKE ? OR faculty LIKE ? OR study_program LIKE ?
+                   OR scholarship_type LIKE ? OR scholarship_cycle LIKE ? OR special_category LIKE ?
+                   OR municipality LIKE ? OR status LIKE ?
+                ORDER BY
+                    CASE status WHEN 'Pending' THEN 0 WHEN 'Approved' THEN 1 ELSE 2 END,
+                    ai_score DESC,
+                    id DESC
+                """;
