@@ -91,3 +91,12 @@ public class ApplicationRepository {
                     ai_score DESC,
                     id DESC
                 """;
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            String query = "%" + keyword + "%";
+            for (int i = 1; i <= 9; i++) ps.setString(i, query);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
+            }
+        }
+        return list;
+    }
