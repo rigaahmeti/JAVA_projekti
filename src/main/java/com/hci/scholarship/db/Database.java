@@ -68,6 +68,15 @@ public class Database {
             throw new RuntimeException("Database initialization failed: " + e.getMessage(), e);
         }
     }
-
+    private static void seedUsers(Connection connection) throws SQLException {
+        String sql = """
+                INSERT OR IGNORE INTO users (username, password_hash, full_name, role)
+                VALUES (?, ?, ?, ?)
+                """;
+        try (var ps = connection.prepareStatement(sql)) {
+            addUser(ps, "student", "student123", "Student Demo", "STUDENT");
+            addUser(ps, "admin", "admin123", "Zyrtari i Bursave", "ADMIN");
+        }
+    }
 
 
