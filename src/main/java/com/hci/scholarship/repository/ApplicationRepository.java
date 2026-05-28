@@ -64,3 +64,18 @@ public class ApplicationRepository {
             ps.executeUpdate();
         }
     }
+    public List<ScholarshipApplication> findAll() throws SQLException {
+        return search("");
+    }
+
+    public List<ScholarshipApplication> topPending(int limit) throws SQLException {
+        List<ScholarshipApplication> list = new ArrayList<>();
+        String sql = "SELECT * FROM scholarship_applications WHERE status='Pending' ORDER BY ai_score DESC, family_income ASC LIMIT ?";
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
+            }
+        }
+        return list;
+    }
