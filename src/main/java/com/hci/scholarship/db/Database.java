@@ -58,7 +58,16 @@ public class Database {
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP
                 );
                 """;
-
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+            statement.execute(usersSql);
+            ensureProfessionalColumns(statement);
+            seedUsers(connection);
+            seedDemoApplications(statement);
+        } catch (SQLException e) {
+            throw new RuntimeException("Database initialization failed: " + e.getMessage(), e);
+        }
+    }
 
 
 
