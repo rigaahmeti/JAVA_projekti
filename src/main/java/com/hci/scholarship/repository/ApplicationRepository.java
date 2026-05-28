@@ -58,3 +58,9 @@ public class ApplicationRepository {
             }
         }
     }
+    public void delete(int id) throws SQLException {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement("DELETE FROM scholarship_applications WHERE id=?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
