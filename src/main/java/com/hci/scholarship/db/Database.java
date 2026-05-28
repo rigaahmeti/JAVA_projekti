@@ -107,3 +107,6 @@ public class Database {
             }
         }
     }
+
+    private static void seedDemoApplications(Statement statement) throws SQLException {
+        statement.executeUpdate("""
