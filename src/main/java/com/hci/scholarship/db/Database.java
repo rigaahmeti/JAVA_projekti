@@ -99,3 +99,11 @@ public class Database {
                 "ALTER TABLE scholarship_applications ADD COLUMN motivation TEXT NOT NULL DEFAULT ''",
                 "ALTER TABLE scholarship_applications ADD COLUMN document_summary TEXT NOT NULL DEFAULT ''"
         );
+        for (String alter : columns) {
+            try {
+                statement.executeUpdate(alter);
+            } catch (SQLException ignored) {
+                // SQLite reports duplicate column names after the first migration.
+            }
+        }
+    }
