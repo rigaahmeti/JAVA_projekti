@@ -42,3 +42,10 @@ public class ApplicationRepository {
             ps.executeUpdate();
         }
     }
+    public void updateStatus(int id, String status) throws SQLException {
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement("UPDATE scholarship_applications SET status=? WHERE id=?")) {
+            ps.setString(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        }
+    }
