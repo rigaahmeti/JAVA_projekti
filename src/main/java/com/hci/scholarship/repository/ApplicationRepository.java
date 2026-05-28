@@ -49,3 +49,12 @@ public class ApplicationRepository {
             ps.executeUpdate();
         }
     }
+    public boolean existsByIndexNumber(String indexNumber) throws SQLException {
+        try (Connection connection = Database.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT 1 FROM scholarship_applications WHERE index_number=? LIMIT 1")) {
+            ps.setString(1, indexNumber);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
