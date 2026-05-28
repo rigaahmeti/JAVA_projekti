@@ -119,3 +119,11 @@ public class ApplicationRepository {
             return rs.next() ? Math.round(rs.getDouble(1) * 100.0) / 100.0 : 0;
         }
     }
+    public List<String[]> countByFaculty() throws SQLException {
+        List<String[]> result = new ArrayList<>();
+        String sql = "SELECT faculty, COUNT(*) AS total FROM scholarship_applications GROUP BY faculty";
+        try (Connection c = Database.getConnection(); Statement st = c.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) result.add(new String[]{rs.getString("faculty"), String.valueOf(rs.getInt("total"))});
+        }
+        return result;
+    }
