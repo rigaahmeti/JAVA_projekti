@@ -87,3 +87,15 @@ public class Database {
         ps.setString(4, role);
         ps.executeUpdate();
     }
+    private static void ensureProfessionalColumns(Statement statement) {
+        List<String> columns = List.of(
+                "ALTER TABLE scholarship_applications ADD COLUMN email TEXT NOT NULL DEFAULT ''",
+                "ALTER TABLE scholarship_applications ADD COLUMN phone TEXT NOT NULL DEFAULT ''",
+                "ALTER TABLE scholarship_applications ADD COLUMN municipality TEXT NOT NULL DEFAULT ''",
+                "ALTER TABLE scholarship_applications ADD COLUMN ects_credits INTEGER NOT NULL DEFAULT 0",
+                "ALTER TABLE scholarship_applications ADD COLUMN household_members INTEGER NOT NULL DEFAULT 1",
+                "ALTER TABLE scholarship_applications ADD COLUMN special_category TEXT NOT NULL DEFAULT 'General'",
+                "ALTER TABLE scholarship_applications ADD COLUMN scholarship_cycle TEXT NOT NULL DEFAULT 'Annual'",
+                "ALTER TABLE scholarship_applications ADD COLUMN motivation TEXT NOT NULL DEFAULT ''",
+                "ALTER TABLE scholarship_applications ADD COLUMN document_summary TEXT NOT NULL DEFAULT ''"
+        );
