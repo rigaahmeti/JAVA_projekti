@@ -16,3 +16,29 @@ public class ApplicationRepository {
                  scholarship_cycle, motivation, document_summary, status, gender, documents_confirmed, ai_recommendation, ai_score)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
+        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, app.getStudentName());
+            ps.setString(2, app.getIndexNumber());
+            ps.setString(3, app.getFaculty());
+            ps.setString(4, app.getStudyProgram());
+            ps.setInt(5, app.getStudyYear());
+            ps.setDouble(6, app.getAverageGrade());
+            ps.setDouble(7, app.getFamilyIncome());
+            ps.setString(8, app.getScholarshipType());
+            ps.setString(9, app.getEmail());
+            ps.setString(10, app.getPhone());
+            ps.setString(11, app.getMunicipality());
+            ps.setInt(12, app.getEctsCredits());
+            ps.setInt(13, app.getHouseholdMembers());
+            ps.setString(14, app.getSpecialCategory());
+            ps.setString(15, app.getScholarshipCycle());
+            ps.setString(16, app.getMotivation());
+            ps.setString(17, app.getDocumentSummary());
+            ps.setString(18, app.getStatus());
+            ps.setString(19, app.getGender());
+            ps.setInt(20, app.isDocumentsConfirmed() ? 1 : 0);
+            ps.setString(21, app.getAiRecommendation());
+            ps.setDouble(22, app.getAiScore());
+            ps.executeUpdate();
+        }
+    }
