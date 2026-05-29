@@ -59,3 +59,19 @@
 .text-area .content {
     -fx-background-color: #ffffff;
 }
+.input-error {
+    -fx-border-color: #dc2626;
+    -fx-border-width: 2;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    -fx-background-color: #fff7f7;
+}
+.input-error:focused {
+    -fx-border-color: #dc2626;
+}
+.field-error {
+    -fx-text-fill: #b91c1c;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 0 0 2;
+}
