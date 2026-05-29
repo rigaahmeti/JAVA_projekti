@@ -75,3 +75,80 @@
     -fx-font-weight: bold;
     -fx-padding: 2 0 0 2;
 }
+.heading {
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+.soft-page {
+    -fx-background-color: linear-gradient(to bottom right, #e8f5f9, #f7fcfd 50%, #edf8fb);
+}
+.soft-page > .label {
+    -fx-background-color: rgba(255,255,255,0.62);
+    -fx-background-radius: 10;
+    -fx-padding: 8 12;
+    -fx-border-color: rgba(203,213,225,0.65);
+    -fx-border-radius: 10;
+}
+.subheading {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+.card {
+    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.96), rgba(248,252,255,0.94));
+    -fx-background-radius: 10;
+    -fx-border-color: #cfe7ef;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.10), 12, 0.16, 0, 3);
+}
+.card .label {
+    -fx-text-fill: #172033;
+}
+.status-bar {
+    -fx-background-color: #0f172a;
+}
+.status-bar .label { -fx-text-fill: white; }
+.metric-card {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 14;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.08), 14, 0.2, 0, 3);
+}
+.clickable-metric {
+    -fx-cursor: hand;
+}
+.clickable-metric:hover, .clickable-metric:focused {
+    -fx-background-color: #dff2f7;
+    -fx-border-color: #6db3ce;
+    -fx-border-radius: 18;
+}
+.clickable-chart-slice {
+    -fx-cursor: hand;
+}
+.ai-box {
+    -fx-background-color: #e7f6fa;
+    -fx-background-radius: 14;
+    -fx-padding: 16;
+    -fx-text-fill: #245c70;
+    -fx-font-size: 14px;
+}
+.rules-box {
+    -fx-background-color: linear-gradient(to bottom right, #e4f5fa, #f4fbfd);
+    -fx-border-color: #6db3ce;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14;
+    -fx-text-fill: #245c70;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(109,179,206,0.16), 12, 0.18, 0, 3);
+}
+.work-panel {
+    -fx-background-color: rgba(255,255,255,0.94);
+    -fx-border-color: #cfe7ef;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
