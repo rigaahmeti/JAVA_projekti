@@ -152,3 +152,79 @@
     -fx-border-radius: 8;
     -fx-background-radius: 8;
 }
+.login-page {
+    -fx-background-color: linear-gradient(to bottom right, #e5f4f8, #f8fcfd 52%, #edf8fb);
+}
+.login-panel, .student-home {
+    -fx-background-color: white;
+    -fx-border-color: #cfe7ef;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.14), 22, 0.18, 0, 8);
+}
+.login-panel {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9fcff);
+    -fx-border-color: #cfe7ef;
+    -fx-border-radius: 0 12 12 0;
+    -fx-background-radius: 0 12 12 0;
+    -fx-effect: none;
+}
+.login-shell {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #cfe7ef;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.14), 20, 0.18, 0, 7);
+}
+.login-visual {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2fafc);
+    -fx-background-radius: 12 0 0 12;
+    -fx-border-color: transparent #d7edf4 transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 35;
+}
+.login-graphic-title {
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6db3ce;
+    -fx-effect: dropshadow(gaussian, rgba(109,179,206,0.24), 8, 0.18, 0, 2);
+}
+.login-graphic-subtitle {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4e7f91;
+}
+.login-icon-circle {
+    -fx-background-color: #edf8fb;
+    -fx-border-color: #9fcede;
+    -fx-border-width: 2;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-min-width: 54;
+    -fx-min-height: 54;
+    -fx-alignment: center;
+    -fx-text-fill: #5aa8c4;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+.login-graphic-line {
+    -fx-background-color: linear-gradient(to right, transparent, #bfe0eb, transparent);
+    -fx-min-height: 2;
+    -fx-max-height: 2;
+    -fx-pref-width: 330;
+}
+.login-brand {
+    -fx-background-color: #e2f4f9;
+    -fx-background-radius: 8;
+    -fx-padding: 9 13;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3b819b;
+}
+.login-security {
+    -fx-background-color: #e8f7fb;
+    -fx-background-radius: 8;
+    -fx-padding: 9 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: #3b819b;
+}
