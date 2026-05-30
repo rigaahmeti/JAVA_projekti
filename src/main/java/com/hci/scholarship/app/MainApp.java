@@ -158,10 +158,28 @@ public class MainApp extends Application {
     }
 
     private HBox createStatusBar() {
-        return null;
+        HBox box = new HBox(statusBar);
+        box.getStyleClass().add("status-bar");
+        box.setPadding(new Insets(8));
+        return box;
     }
 
     private void configureShortcuts(Scene scene, Stage stage) {
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN), () -> {
+            if (currentRole == UserRole.STUDENT) showApplicationForm();
+        });
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN), () -> {
+            if (currentRole == UserRole.ADMIN) showApplicationsTable();
+        });
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN), () -> {
+            if (currentRole == UserRole.ADMIN) root.setCenter(createDashboardView());
+        });
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.B, KeyCombination.CONTROL_DOWN), () -> {
+            if (currentRole == UserRole.ADMIN) showDatabaseWindow(stage);
+        });
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.F1), this::showHelp);
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ESCAPE), () -> statusBar.setText(lang.get("status.ready")));
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN), () -> closeApplication(stage));
     }
 
     private void closeApplication(Stage stage) {
