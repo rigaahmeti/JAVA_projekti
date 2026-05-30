@@ -228,3 +228,88 @@
     -fx-font-size: 13px;
     -fx-text-fill: #3b819b;
 }
+.student-home {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-effect: none;
+}
+.student-hero {
+    -fx-background-color: linear-gradient(to right, #6db3ce 0%, #5aa8c4 42%, #ffffff 43%, #fbfdff 100%);
+    -fx-background-radius: 12;
+    -fx-border-color: #b7dce8;
+    -fx-border-radius: 12;
+    -fx-padding: 44 50;
+    -fx-min-height: 430;
+    -fx-effect: dropshadow(gaussian, rgba(70,120,140,0.18), 22, 0.16, 0, 7);
+}
+.hero-badge {
+    -fx-background-color: rgba(255,255,255,0.16);
+    -fx-background-radius: 7;
+    -fx-padding: 7 11;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #eaf3ff;
+}
+.hero-title {
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+.hero-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #eaf3ff;
+    -fx-max-width: 480;
+}
+.hero-button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #3b819b;
+    -fx-font-size: 12px;
+    -fx-padding: 7 16;
+    -fx-border-color: #b7dce8;
+    -fx-border-radius: 7;
+}
+.hero-button:hover {
+    -fx-background-color: #edf8fb;
+}
+.student-action-panel {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f2fafc);
+    -fx-border-color: #cfe7ef;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 13;
+    -fx-min-height: 115;
+}
+.scholarship-illustration {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #cfe7ef;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.10), 15, 0.16, 0, 4);
+}
+.illustration-title {
+    -fx-text-fill: #415078;
+    -fx-font-size: 22px;
+    -fx-font-weight: normal;
+}
+.illustration-coin {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #6db3ce;
+    -fx-border-width: 2;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-min-width: 74;
+    -fx-min-height: 74;
+    -fx-alignment: center;
+    -fx-font-size: 34px;
+    -fx-text-fill: #6db3ce;
+    -fx-font-weight: bold;
+}
+.illustration-book {
+    -fx-background-color: linear-gradient(to right, #6db3ce 0%, #6db3ce 48%, #ffffff 49%, #ffffff 51%, #9fd3e3 52%, #9fd3e3 100%);
+    -fx-border-color: #4f98b4;
+    -fx-border-width: 2;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-min-width: 145;
+    -fx-min-height: 58;
+}
