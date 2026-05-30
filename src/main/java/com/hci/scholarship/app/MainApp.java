@@ -183,17 +183,87 @@ public class MainApp extends Application {
     }
 
     private void closeApplication(Stage stage) {
+        stage.close();
+        Platform.exit();
     }
 
     private void showLogin(Stage stage) {
+        currentRole = null;
+        currentUserName = null;
+        root.setTop(createLoginMenu(stage));
+        root.setBottom(null);
+        root.setCenter(createLoginView(stage));
     }
 
     private MenuBar createLoginMenu(Stage stage) {
-        return null;
+        Menu language = new Menu(lang.get("menu.language"));
+        MenuItem albanian = new MenuItem("Shqip");
+        albanian.setOnAction(e -> {
+            lang.setLanguage("sq");
+            stage.setTitle(lang.get("app.title"));
+            showLogin(stage);
+        });
+        MenuItem english = new MenuItem("English");
+        english.setOnAction(e -> {
+            lang.setLanguage("en");
+            stage.setTitle(lang.get("app.title"));
+            showLogin(stage);
+        });
+        language.getItems().addAll(albanian, english);
+        return new MenuBar(language);
     }
 
     private BorderPane createLoginView(Stage stage) {
-        return null;
+        Label title = new Label(lang.get("login.title"));
+        title.getStyleClass().add("heading");
+        Label intro = new Label(lang.get("login.description"));
+        intro.setWrapText(true);
+        TextField username = new TextField();
+        username.setPromptText(lang.get("login.username"));
+        PasswordField password = new PasswordField();
+        password.setPromptText(lang.get("login.password"));
+        Button enter = new Button(lang.get("login.enter"));
+        enter.setDefaultButton(true);
+        Label secure = new Label(lang.get("login.secure"));
+        secure.getStyleClass().add("login-security");
+
+        Runnable loginAction = () -> {
+            try {
+                var account = userRepository.authenticate(username.getText().trim().toLowerCase(), password.getText());
+                if (account.isEmpty()) {
+                    password.clear();
+                    showError(lang.get("msg.error"), lang.get("login.invalid"));
+                    return;
+                }
+                currentRole = UserRole.valueOf(account.get().getRole());
+                currentUserName = account.get().getFullName();
+                SessionManager.login(account.get().getUsername(), account.get().getRole());
+                rebuildLayout(stage);
+                statusBar.setText(currentRole == UserRole.STUDENT ? lang.get("status.student") : lang.get("status.admin"));
+            } catch (SQLException ex) {
+                showError(lang.get("msg.error"), ex.getMessage());
+            }
+        };
+        enter.setOnAction(e -> loginAction.run());
+        username.setOnAction(e -> loginAction.run());
+        password.setOnAction(e -> loginAction.run());
+
+        Label brand = new Label(lang.get("login.brand"));
+        brand.getStyleClass().add("login-brand");
+        VBox panel = new VBox(13, brand, title, intro, new Label(lang.get("login.username")), username,
+                new Label(lang.get("login.password")), password, new HBox(12, enter, secure));
+        panel.setMaxWidth(390);
+        panel.setPadding(new Insets(26));
+        panel.getStyleClass().add("login-panel");
+        HBox shell = new HBox(0, createLoginIllustration(), panel);
+        shell.setAlignment(Pos.CENTER);
+        shell.getStyleClass().add("login-shell");
+        HBox.setHgrow(panel, Priority.ALWAYS);
+        StackPane centered = new StackPane(shell);
+        centered.setPadding(new Insets(26));
+        BorderPane page = new BorderPane(centered);
+        page.getStyleClass().add("login-page");
+        return page;
     }
 
     private StackPane createLoginIllustration() {
@@ -217,6 +287,10 @@ public class MainApp extends Application {
     }
 
     private void logout(Stage stage) {
+        table = null;
+        statusBar.setText(lang.get("status.ready"));
+        SessionManager.logout();
+        showLogin(stage);
     }
 
     private void showApplicationForm() {
