@@ -84,10 +84,56 @@ public class MainApp extends Application {
     }
 
     private void rebuildLayout(Stage stage) {
+        if (currentRole == null) {
+            showLogin(stage);
+            return;
+        }
+        root.setTop(new VBox(createMenuBar(stage), createToolbar(stage)));
+        root.setCenter(currentRole == UserRole.ADMIN ? createDashboardView() : createStudentHomeView());
+        root.setBottom(createStatusBar());
     }
 
     private MenuBar createMenuBar(Stage stage) {
-        return null;
+        Menu file = new Menu(lang.get("menu.file"));
+        if (currentRole == UserRole.STUDENT) {
+            MenuItem criteria = new MenuItem(lang.get("menu.criteria"));
+            criteria.setOnAction(e -> root.setCenter(createCriteriaView()));
+            MenuItem newApp = new MenuItem(lang.get("menu.new"));
+            newApp.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
+            newApp.setOnAction(e -> showApplicationForm());
+            file.getItems().addAll(criteria, newApp);
+        } else {
+            MenuItem applications = new MenuItem(lang.get("menu.applications"));
+            applications.setAccelerator(new KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN));
+            applications.setOnAction(e -> showApplicationsTable());
+            MenuItem dashboard = new MenuItem(lang.get("menu.dashboard"));
+            dashboard.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
+            dashboard.setOnAction(e -> root.setCenter(createDashboardView()));
+            MenuItem database = new MenuItem(lang.get("menu.database"));
+            database.setAccelerator(new KeyCodeCombination(KeyCode.B, KeyCombination.CONTROL_DOWN));
+            database.setOnAction(e -> showDatabaseWindow(stage));
+            file.getItems().addAll(applications, dashboard, database);
+        }
+        MenuItem logout = new MenuItem(lang.get("menu.logout"));
+        logout.setOnAction(e -> logout(stage));
+        MenuItem exit = new MenuItem(lang.get("menu.exit"));
+        exit.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
+        exit.setOnAction(e -> closeApplication(stage));
+        file.getItems().addAll(new SeparatorMenuItem(), logout, exit);
+
+        Menu language = new Menu(lang.get("menu.language"));
+        MenuItem albanian = new MenuItem("Shqip");
+        albanian.setOnAction(e -> { lang.setLanguage("sq"); stage.setTitle(lang.get("app.title")); rebuildLayout(stage); });
+        MenuItem english = new MenuItem("English");
+        english.setOnAction(e -> { lang.setLanguage("en"); stage.setTitle(lang.get("app.title")); rebuildLayout(stage); });
+        language.getItems().addAll(albanian, english);
+
+        Menu help = new Menu(lang.get("menu.help"));
+        MenuItem helpItem = new MenuItem(lang.get("menu.openHelp"));
+        helpItem.setAccelerator(new KeyCodeCombination(KeyCode.F1));
+        helpItem.setOnAction(e -> showHelp());
+        help.getItems().add(helpItem);
+        return new MenuBar(file, language, help);
     }
 
     private ToolBar createToolbar(Stage stage) {
