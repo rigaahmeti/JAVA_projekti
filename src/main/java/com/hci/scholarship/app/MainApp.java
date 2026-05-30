@@ -137,7 +137,24 @@ public class MainApp extends Application {
     }
 
     private ToolBar createToolbar(Stage stage) {
-        return null;
+        Button logoutBtn = new Button(lang.get("toolbar.logout"));
+        logoutBtn.setOnAction(e -> logout(stage));
+        Button helpBtn = new Button(lang.get("toolbar.help"));
+        helpBtn.setOnAction(e -> showHelp());
+        if (currentRole == UserRole.STUDENT) {
+            Button criteriaBtn = new Button(lang.get("toolbar.criteria"));
+            criteriaBtn.setOnAction(e -> root.setCenter(createCriteriaView()));
+            Button newBtn = new Button(lang.get("toolbar.new"));
+            newBtn.setOnAction(e -> showApplicationForm());
+            return new ToolBar(criteriaBtn, newBtn, new Separator(), helpBtn, logoutBtn);
+        }
+        Button tableBtn = new Button(lang.get("toolbar.table"));
+        tableBtn.setOnAction(e -> showApplicationsTable());
+        Button dashboardBtn = new Button(lang.get("toolbar.dashboard"));
+        dashboardBtn.setOnAction(e -> root.setCenter(createDashboardView()));
+        Button databaseBtn = new Button(lang.get("toolbar.database"));
+        databaseBtn.setOnAction(e -> showDatabaseWindow((Stage) root.getScene().getWindow()));
+        return new ToolBar(dashboardBtn, tableBtn, databaseBtn, new Separator(), helpBtn, logoutBtn);
     }
 
     private HBox createStatusBar() {
