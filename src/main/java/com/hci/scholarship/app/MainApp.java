@@ -54,10 +54,33 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
+        launch(args);
     }
 
     @Override
     public void start(Stage stage) {
+        Database.initialize();
+        root = new BorderPane();
+        root.getStyleClass().add("root");
+        statusBar = new Label(lang.get("status.ready"));
+        showLogin(stage);
+
+        Rectangle2D visibleScreen = Screen.getPrimary().getVisualBounds();
+        double sceneWidth = Math.min(1280, visibleScreen.getWidth() - 48);
+        double sceneHeight = Math.min(840, visibleScreen.getHeight() - 48);
+        Scene scene = new Scene(root, sceneWidth, sceneHeight);
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        configureShortcuts(scene, stage);
+        stage.setTitle(lang.get("app.title"));
+        stage.setScene(scene);
+        stage.setMinWidth(980);
+        stage.setMinHeight(680);
+        stage.setMaxWidth(visibleScreen.getWidth());
+        stage.setMaxHeight(visibleScreen.getHeight());
+        stage.setX(visibleScreen.getMinX() + (visibleScreen.getWidth() - sceneWidth) / 2);
+        stage.setY(visibleScreen.getMinY() + (visibleScreen.getHeight() - sceneHeight) / 2);
+        stage.setOnCloseRequest(e -> Platform.exit());
+        stage.show();
     }
 
     private void rebuildLayout(Stage stage) {
