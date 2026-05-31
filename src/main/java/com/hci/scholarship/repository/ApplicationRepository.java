@@ -199,7 +199,6 @@ public class ApplicationRepository {
         }
         return result;
     }
-
     private ScholarshipApplication map(ResultSet rs) throws SQLException {
         return new ScholarshipApplication(
                 rs.getInt("id"),
@@ -230,4 +229,3 @@ public class ApplicationRepository {
         );
     }
 }
-
