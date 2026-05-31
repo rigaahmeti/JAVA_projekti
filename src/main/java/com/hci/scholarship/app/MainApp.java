@@ -302,11 +302,51 @@ public class MainApp extends Application {
     }
 
     private BorderPane createStudentHomeView() {
-        return null;
+        Label badge = new Label(lang.get("login.brand"));
+        badge.getStyleClass().add("hero-badge");
+        Label welcome = new Label(lang.get("student.title"));
+        welcome.getStyleClass().add("hero-title");
+        Button apply = new Button(lang.get("student.apply"));
+        apply.getStyleClass().add("hero-button");
+        apply.setOnAction(e -> showApplicationForm());
+        Button criteria = new Button(lang.get("student.criteria"));
+        criteria.getStyleClass().add("secondary-button");
+        criteria.setOnAction(e -> root.setCenter(createCriteriaView()));
+
+        VBox heroCopy = new VBox(16, badge, welcome, new HBox(12, apply, criteria));
+        heroCopy.setAlignment(Pos.CENTER_LEFT);
+        HBox hero = new HBox(26, heroCopy, createScholarshipIllustration());
+        hero.setAlignment(Pos.CENTER);
+        HBox.setHgrow(heroCopy, Priority.ALWAYS);
+        hero.getStyleClass().add("student-hero");
+
+        VBox content = new VBox(hero);
+        content.setPadding(new Insets(14));
+        content.getStyleClass().add("student-home");
+
+        BorderPane page = new BorderPane(content);
+        page.setPadding(new Insets(16));
+        return page;
     }
 
     private StackPane createScholarshipIllustration() {
-        return null;
+        Label cap = new Label("SCHOLARSHIP");
+        cap.getStyleClass().add("illustration-title");
+        Label icon = new Label("$");
+        icon.getStyleClass().add("illustration-coin");
+        Region book = new Region();
+        book.getStyleClass().add("illustration-book");
+        Region card = new Region();
+        card.getStyleClass().add("illustration-card");
+        VBox objects = new VBox(12, icon, book);
+        objects.setAlignment(Pos.CENTER);
+        StackPane illustration = new StackPane(card, objects, cap);
+        StackPane.setAlignment(cap, Pos.TOP_LEFT);
+        StackPane.setMargin(cap, new Insets(24, 0, 0, 26));
+        illustration.getStyleClass().add("scholarship-illustration");
+        illustration.setMinSize(330, 220);
+        illustration.setPrefSize(390, 250);
+        return illustration;
     }
 
     private BorderPane createCriteriaView() {
