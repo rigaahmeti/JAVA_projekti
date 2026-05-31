@@ -394,30 +394,185 @@ public class MainApp extends Application {
     private void showApplicationForm() {
     }
 
-    private void showApplicationsTable() {
-    }
+    private void showApplicationsTable() {showApplicationsTable("");}
+
 
     private void showApplicationsTable(String initialFilter) {
-    }
+            table = new TableView<>();
+            table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+            TableColumn<ScholarshipApplication, Number> id = new TableColumn<>("ID");
+            id.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()));
+            TableColumn<ScholarshipApplication, String> name = new TableColumn<>(lang.get("table.name"));
+            name.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudentName()));
+            TableColumn<ScholarshipApplication, String> index = new TableColumn<>(lang.get("table.index"));
+            index.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIndexNumber()));
+            TableColumn<ScholarshipApplication, String> faculty = new TableColumn<>(lang.get("table.faculty"));
+            faculty.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFaculty()));
+            TableColumn<ScholarshipApplication, String> type = new TableColumn<>(lang.get("table.type"));
+            type.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getScholarshipType()));
+            TableColumn<ScholarshipApplication, String> program = new TableColumn<>(lang.get("table.program"));
+            program.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudyProgram()));
+            TableColumn<ScholarshipApplication, String> cycle = new TableColumn<>(lang.get("table.cycle"));
+            cycle.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getScholarshipCycle()));
+            TableColumn<ScholarshipApplication, Number> year = new TableColumn<>(lang.get("table.year"));
+            year.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getStudyYear()));
+            TableColumn<ScholarshipApplication, Number> average = new TableColumn<>(lang.get("table.average"));
+            average.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getAverageGrade()));
+            TableColumn<ScholarshipApplication, Number> income = new TableColumn<>(lang.get("table.income"));
+            income.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getFamilyIncome()));
+            TableColumn<ScholarshipApplication, String> status = new TableColumn<>(lang.get("table.status"));
+            status.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
+            TableColumn<ScholarshipApplication, Number> score = new TableColumn<>("AI Score");
+            score.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getAiScore()));
+            TableColumn<ScholarshipApplication, String> rec = new TableColumn<>(lang.get("table.recommendation"));
+            rec.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAiRecommendation()));
+            table.getColumns().addAll(id, name, index, faculty, program, type, cycle, year, average, income, status, score, rec);
+
+            TextField search = new TextField();
+            search.setPromptText(lang.get("table.search"));
+            search.setText(initialFilter);
+            search.setOnAction(e -> loadTable(search.getText()));
+            Button searchBtn = new Button(lang.get("button.search"));
+            Button refresh = new Button(lang.get("button.refresh"));
+            Button approve = new Button(lang.get("button.approve"));
+            Button reject = new Button(lang.get("button.reject"));
+            Button details = new Button(lang.get("button.details"));
+            Button delete = new Button(lang.get("button.delete"));
+            HBox actions = new HBox(10, search, searchBtn, refresh, details, approve, reject, delete);
+            actions.setAlignment(Pos.CENTER_LEFT);
+
+            searchBtn.setOnAction(e -> loadTable(search.getText()));
+            refresh.setOnAction(e -> loadTable(""));
+            approve.setOnAction(e -> changeSelectedStatus("Approved"));
+            reject.setOnAction(e -> changeSelectedStatus("Rejected"));
+            details.setOnAction(e -> showSelectedDetails());
+            delete.setOnAction(e -> deleteSelected());
+
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem approveItem = new MenuItem(lang.get("button.approve"));
+            approveItem.setOnAction(e -> changeSelectedStatus("Approved"));
+            MenuItem rejectItem = new MenuItem(lang.get("button.reject"));
+            rejectItem.setOnAction(e -> changeSelectedStatus("Rejected"));
+            MenuItem deleteItem = new MenuItem(lang.get("button.delete"));
+            deleteItem.setOnAction(e -> deleteSelected());
+            MenuItem detailsItem = new MenuItem(lang.get("button.details"));
+            detailsItem.setOnAction(e -> showSelectedDetails());
+            contextMenu.getItems().addAll(detailsItem, new SeparatorMenuItem(), approveItem, rejectItem, new SeparatorMenuItem(), deleteItem);
+            table.setContextMenu(contextMenu);
+
+            VBox content = new VBox(12, actions, table);
+            content.setPadding(new Insets(20));
+            content.getStyleClass().add("card");
+            VBox.setVgrow(table, Priority.ALWAYS);
+            root.setCenter(createPage(lang.get("page.applications"), content));
+            setTabOrder(List.of(search, searchBtn, refresh, details, approve, reject, delete, table));
+            loadTable(initialFilter);
+            statusBar.setText(lang.get("status.table"));
+        }
 
     private BorderPane createDashboardView() {
-        return null;
+        VBox wrapper = new VBox(18);
+        wrapper.setPadding(new Insets(20));
+        try {
+            Label adminHeading = new Label(lang.get("admin.title") + " - " + currentUserName);
+            adminHeading.getStyleClass().add("portal-banner");
+            Label total = metric(lang.get("dash.total"), String.valueOf(repository.countAll()), () -> showApplicationsTable(""));
+            Label pending = metric(lang.get("dash.pending"), String.valueOf(repository.countByStatus("Pending")), () -> showApplicationsTable("Pending"));
+            Label approved = metric(lang.get("dash.approved"), String.valueOf(repository.countByStatus("Approved")), () -> showApplicationsTable("Approved"));
+            Label rejected = metric(lang.get("dash.rejected"), String.valueOf(repository.countByStatus("Rejected")), () -> showApplicationsTable("Rejected"));
+            Label avgScore = metric(lang.get("dash.avgScore"), String.valueOf(repository.averageScore()));
+            HBox metrics = new HBox(14, total, pending, approved, rejected, avgScore);
+            metrics.getChildren().forEach(n -> HBox.setHgrow(n, Priority.ALWAYS));
+
+            PieChart.Data pendingSlice = statusSlice("Pending", repository.countByStatus("Pending"));
+            PieChart.Data approvedSlice = statusSlice("Approved", repository.countByStatus("Approved"));
+            PieChart.Data rejectedSlice = statusSlice("Rejected", repository.countByStatus("Rejected"));
+            PieChart pieChart = new PieChart(FXCollections.observableArrayList(pendingSlice, approvedSlice, rejectedSlice));
+            pieChart.setTitle(lang.get("dash.statusChart"));
+
+            CategoryAxis xAxis = new CategoryAxis();
+            NumberAxis yAxis = new NumberAxis();
+            BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+            barChart.setTitle(lang.get("dash.facultyChart"));
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName(lang.get("dash.applications"));
+            for (String[] row : repository.countByFaculty()) series.getData().add(new XYChart.Data<>(row[0], Integer.parseInt(row[1])));
+            barChart.getData().add(series);
+
+            Label biAi = new Label(lang.get("dash.biAiText"));
+            biAi.getStyleClass().add("ai-box");
+            VBox queue = priorityQueue();
+            HBox charts = new HBox(18, pieChart, barChart);
+            HBox.setHgrow(barChart, Priority.ALWAYS);
+            wrapper.getChildren().addAll(adminHeading, metrics, charts, queue, biAi);
+        } catch (SQLException e) {
+            wrapper.getChildren().add(new Label(e.getMessage()));
+        }
+        ScrollPane dashboardScroll = new ScrollPane(wrapper);
+        dashboardScroll.setFitToWidth(true);
+        dashboardScroll.getStyleClass().add("page-scroll");
+        return createPage(lang.get("page.dashboard"), dashboardScroll);
     }
 
     private VBox priorityQueue() throws SQLException {
-        return null;
+        TableView<ScholarshipApplication> queue = new TableView<>();
+        queue.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        queue.setPrefHeight(210);
+        TableColumn<ScholarshipApplication, String> student = new TableColumn<>(lang.get("table.name"));
+        student.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudentName()));
+        TableColumn<ScholarshipApplication, String> scholarship = new TableColumn<>(lang.get("table.type"));
+        scholarship.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getScholarshipType()));
+        TableColumn<ScholarshipApplication, Number> income = new TableColumn<>(lang.get("table.income"));
+        income.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getFamilyIncome()));
+        TableColumn<ScholarshipApplication, Number> score = new TableColumn<>("Priority");
+        score.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getAiScore()));
+        queue.getColumns().addAll(student, scholarship, income, score);
+        queue.setItems(FXCollections.observableArrayList(repository.topPending(5)));
+        queue.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) showApplicationsTable("Pending");
+        });
+
+        Button review = new Button(lang.get("dash.reviewQueue"));
+        review.setOnAction(e -> showApplicationsTable("Pending"));
+        Label title = new Label(lang.get("dash.queueTitle"));
+        title.getStyleClass().add("subheading");
+        VBox panel = new VBox(10, new HBox(12, title, review), queue);
+        panel.setPadding(new Insets(16));
+        panel.getStyleClass().add("work-panel");
+        return panel;
     }
 
     private Label metric(String title, String value) {
-        return null;
+        return metric(title, value, null);
     }
 
     private Label metric(String title, String value, Runnable action) {
-        return null;
+        Label label = new Label(title + "\n" + value);
+        label.getStyleClass().add("metric-card");
+        label.setMaxWidth(Double.MAX_VALUE);
+        if (action != null) {
+            label.getStyleClass().add("clickable-metric");
+            label.setFocusTraversable(true);
+            label.setOnMouseClicked(e -> action.run());
+            label.setOnKeyPressed(e -> {
+                if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
+                    action.run();
+                    e.consume();
+                }
+            });
+        }
+        return label;
     }
 
     private PieChart.Data statusSlice(String status, int count) {
-        return null;
+        PieChart.Data data = new PieChart.Data(status, count);
+        data.nodeProperty().addListener((ignored, previous, node) -> {
+            if (node != null) {
+                node.getStyleClass().add("clickable-chart-slice");
+                node.setOnMouseClicked(e -> showApplicationsTable(status));
+            }
+        });
+        return data;
     }
 
     private Map<String, List<String>> studyPrograms() {
@@ -437,15 +592,71 @@ public class MainApp extends Application {
     }
 
     private void loadTable(String keyword) {
+        try {
+            table.setItems(FXCollections.observableArrayList(repository.search(keyword == null ? "" : keyword)));
+        } catch (SQLException e) {
+            showError(lang.get("msg.error"), e.getMessage());
+        }
     }
 
     private void changeSelectedStatus(String status) {
+        ScholarshipApplication selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) { showError(lang.get("msg.error"), lang.get("msg.selectRow")); return; }
+        try { repository.updateStatus(selected.getId(), status); loadTable(""); } catch (SQLException e) { showError(lang.get("msg.error"), e.getMessage()); }
     }
 
     private void deleteSelected() {
+        ScholarshipApplication selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) { showError(lang.get("msg.error"), lang.get("msg.selectRow")); return; }
+        try { repository.delete(selected.getId()); loadTable(""); } catch (SQLException e) { showError(lang.get("msg.error"), e.getMessage()); }
     }
 
     private void showSelectedDetails() {
+        ScholarshipApplication selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showError(lang.get("msg.error"), lang.get("msg.selectRow"));
+            return;
+        }
+        TextArea details = new TextArea(String.format("""
+                %s: %s
+                %s: %s
+                %s: %s
+                %s: %s
+                %s: %s
+                %s: %d
+                %s: %.2f
+                %s: %.2f
+                %s: %d
+                %s: %s
+                %s: %s
+                %s: %s
+                %s: %s
+
+                %s:
+                %s
+                """,
+                lang.get("table.name"), selected.getStudentName(),
+                lang.get("table.index"), selected.getIndexNumber(),
+                lang.get("form.email"), selected.getEmail(),
+                lang.get("form.phone"), selected.getPhone(),
+                lang.get("form.municipality"), selected.getMunicipality(),
+                lang.get("form.ects"), selected.getEctsCredits(),
+                lang.get("table.average"), selected.getAverageGrade(),
+                lang.get("table.income"), selected.getFamilyIncome(),
+                lang.get("form.household"), selected.getHouseholdMembers(),
+                lang.get("form.category"), selected.getSpecialCategory(),
+                lang.get("form.cycle"), selected.getScholarshipCycle(),
+                lang.get("form.checklist"), selected.getDocumentSummary(),
+                lang.get("table.recommendation"), selected.getAiRecommendation(),
+                lang.get("form.note"), selected.getMotivation()));
+        details.setEditable(false);
+        details.setWrapText(true);
+        details.setPrefSize(640, 460);
+        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+        dialog.setTitle(lang.get("button.details"));
+        dialog.setHeaderText(selected.getStudentName() + " - " + selected.getScholarshipType());
+        dialog.getDialogPane().setContent(details);
+        dialog.showAndWait();
     }
 
     private void showHelp() {
@@ -462,6 +673,52 @@ public class MainApp extends Application {
     }
 
     private void showDatabaseWindow(Stage owner) {
+        TextField url = new TextField(Database.url());
+        url.setEditable(false);
+
+        Label state = new Label(lang.get("db.notTested"));
+        Button test = new Button(lang.get("db.test"));
+        Button openTable = new Button(lang.get("db.openTable"));
+        Button close = new Button(lang.get("button.close"));
+
+        GridPane details = new GridPane();
+        details.setHgap(12);
+        details.setVgap(12);
+        addRow(details, 0, lang.get("db.driver"), new Label("SQLite JDBC"));
+        addRow(details, 1, lang.get("db.url"), url);
+        addRow(details, 2, lang.get("db.status"), state);
+
+        Stage dialog = new Stage();
+        dialog.initOwner(owner);
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.setTitle(lang.get("db.title"));
+
+        test.setDefaultButton(true);
+        test.setOnAction(e -> {
+            try (Connection ignored = Database.getConnection()) {
+                state.setText(lang.get("db.connected"));
+                statusBar.setText(lang.get("status.databaseConnected"));
+            } catch (SQLException ex) {
+                state.setText(lang.get("db.failed"));
+                showError(lang.get("msg.error"), ex.getMessage());
+            }
+        });
+        openTable.setOnAction(e -> {
+            dialog.close();
+            showApplicationsTable();
+        });
+        close.setOnAction(e -> dialog.close());
+
+        HBox actions = new HBox(10, test, openTable, close);
+        VBox content = new VBox(14, details, actions);
+        content.setPadding(new Insets(20));
+        content.getStyleClass().add("card");
+
+        Scene scene = new Scene(content, 560, 280);
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        dialog.setScene(scene);
+        setTabOrder(List.of(url, test, openTable, close));
+        dialog.showAndWait();
     }
 
     private void validate(TextField name, TextField index, TextField email, TextField phone, ComboBox<String> municipality,
