@@ -350,11 +350,38 @@ public class MainApp extends Application {
     }
 
     private BorderPane createCriteriaView() {
-        return null;
+        Label title = new Label(lang.get("criteria.title"));
+        title.getStyleClass().add("criteria-title");
+        Label lead = new Label(lang.get("criteria.description"));
+        lead.setWrapText(true);
+        lead.getStyleClass().add("criteria-lead");
+        VBox academic = criteriaSection(lang.get("criteria.academicTitle"), lang.get("criteria.academic"));
+        VBox financial = criteriaSection(lang.get("criteria.financialTitle"), lang.get("criteria.financial"));
+        VBox documents = criteriaSection(lang.get("criteria.documentsTitle"), lang.get("criteria.documents"));
+        VBox review = criteriaSection(lang.get("criteria.reviewTitle"), lang.get("criteria.review"));
+        Button apply = new Button(lang.get("student.apply"));
+        apply.setOnAction(e -> showApplicationForm());
+        TilePane grid = new TilePane(16, 16, academic, financial, documents, review);
+        grid.setPrefColumns(2);
+        grid.setMaxWidth(Double.MAX_VALUE);
+        VBox content = new VBox(18, title, lead, grid, apply);
+        content.setPadding(new Insets(32));
+        content.getStyleClass().add("criteria-page");
+        ScrollPane scroll = new ScrollPane(content);
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("page-scroll");
+        return createPage(lang.get("page.criteria"), scroll);
     }
 
     private VBox criteriaSection(String title, String text) {
-        return null;
+        Label heading = new Label(title);
+        heading.getStyleClass().add("criteria-section-title");
+        Label body = new Label(text);
+        body.setWrapText(true);
+        VBox section = new VBox(10, heading, body);
+        section.setPrefWidth(420);
+        section.getStyleClass().add("criteria-section");
+        return section;
     }
 
     private void logout(Stage stage) {
