@@ -998,22 +998,54 @@ public class MainApp extends Application {
     }
 
     private String documentSummary(CheckBox identityDoc, CheckBox transcriptDoc, CheckBox incomeDoc, CheckBox studentDoc) {
-        return null;
+        return String.join(", ", identityDoc.getText(), transcriptDoc.getText(), incomeDoc.getText(), studentDoc.getText());
     }
 
     private boolean requireText(TextInputControl field) {
-        return false;
+        if (field.getText().isBlank()) {
+            this.showFieldError(field, this.lang.get("validation.requiredField"));
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private boolean requireCombo(ComboBox<?> comboBox) {
-        return false;
+        if (comboBox.getValue() == null) {
+            this.showFieldError(comboBox, this.lang.get("validation.requiredField"));
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private double parseDoubleOrMark(TextField field, String message) {
-        return 0;
+        if (field.getText().isBlank()) {
+            return (double)-1.0F;
+        } else {
+            try {
+                return Double.parseDouble(field.getText().trim());
+            } catch (NumberFormatException var4) {
+                this.showFieldError(field, message);
+                return (double)-1.0F;
+            }
+        }
     }
 
     private void showFieldError(javafx.scene.Node field, String message) {
+        Label error = (Label)this.fieldErrors.get(field);
+        if (error == null && field.getParent() != null) {
+            error = (Label)this.fieldErrors.get(field.getParent());
+        }
+
+        if (error != null) {
+            error.setText(message);
+            error.setManaged(true);
+            error.setVisible(true);
+        }
+
+        field.getStyleClass().remove("input-error");
+        field.getStyleClass().add("input-error");
     }
 
     private void clearFieldErrors() {
