@@ -15,6 +15,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -392,6 +394,174 @@ public class MainApp extends Application {
     }
 
     private void showApplicationForm() {
+        {
+            this.fieldErrors = new LinkedHashMap();
+            TextField name = new TextField();
+            TextField index = new TextField();
+            TextField email = new TextField();
+            TextField phone = new TextField();
+            phone.setText("+383");
+            phone.setPromptText("+383 XX XXX XXX");
+            this.keepPhonePrefix(phone);
+            ComboBox<String> municipality = new ComboBox(FXCollections.observableArrayList(new String[]{"Prishtine", "Prizren", "Peje", "Gjakove", "Gjilan", "Ferizaj", "Mitrovice", "Podujeve", "Vushtrri", "Suhareke", "Rahovec", "Other"}));
+            ComboBox<String> faculty = new ComboBox(FXCollections.observableArrayList(this.studyPrograms().keySet()));
+            ComboBox<String> program = new ComboBox();
+            faculty.setMaxWidth(Double.MAX_VALUE);
+            program.setMaxWidth(Double.MAX_VALUE);
+            program.setDisable(true);
+            faculty.setPromptText(this.lang.get("form.chooseFaculty"));
+            program.setPromptText(this.lang.get("form.chooseProgram"));
+            faculty.setOnAction((e) -> {
+                program.setItems(FXCollections.observableArrayList((Collection)this.studyPrograms().getOrDefault(faculty.getValue(), List.of())));
+                program.setValue((Object)null);
+                program.setDisable(program.getItems().isEmpty());
+            });
+            Spinner<Integer> year = new Spinner(1, 5, 1);
+            Spinner<Integer> ects = new Spinner(0, 300, 60, 6);
+            TextField average = new TextField();
+            average.setPromptText("8.0 - 10.0");
+            this.allowDecimalInput(average);
+            TextField income = new TextField();
+            income.setPromptText("0.00");
+            this.allowDecimalInput(income);
+            Spinner<Integer> household = new Spinner(1, 15, 4);
+            ComboBox<String> category = new ComboBox(FXCollections.observableArrayList(new String[]{"General", "Low-income household", "Orphan support", "Disability support", "First-generation student", "Minority community", "Single-parent household"}));
+            ComboBox<String> cycle = new ComboBox(FXCollections.observableArrayList(new String[]{"Annual 2026/27", "Semester Fall 2026", "Semester Spring 2027", "Emergency support", "Mobility support"}));
+            ComboBox<String> type = new ComboBox(FXCollections.observableArrayList(new String[]{"Excellence and Need", "Merit Scholarship", "Social Support", "STEM Scholarship", "Research Project", "Sports Achievement", "Arts and Culture", "Women in STEM", "Mobility Grant", "Final-year Completion"}));
+            ToggleGroup genderGroup = new ToggleGroup();
+            RadioButton male = new RadioButton(this.lang.get("form.male"));
+            RadioButton female = new RadioButton(this.lang.get("form.female"));
+            male.setToggleGroup(genderGroup);
+            female.setToggleGroup(genderGroup);
+            male.setSelected(true);
+            CheckBox activeStudent = new CheckBox(this.lang.get("form.activeStudent"));
+            CheckBox noOtherScholarship = new CheckBox(this.lang.get("form.noOtherScholarship"));
+            CheckBox documents = new CheckBox(this.lang.get("form.documents"));
+            CheckBox identityDoc = new CheckBox(this.lang.get("form.identityDoc"));
+            CheckBox transcriptDoc = new CheckBox(this.lang.get("form.transcriptDoc"));
+            CheckBox incomeDoc = new CheckBox(this.lang.get("form.incomeDoc"));
+            CheckBox studentDoc = new CheckBox(this.lang.get("form.studentDoc"));
+            TextArea note = new TextArea();
+            note.setPromptText(this.lang.get("form.notePrompt"));
+            note.setPrefRowCount(3);
+            Button save = new Button(this.lang.get("button.save"));
+            save.setDefaultButton(true);
+            Button clear = new Button(this.lang.get("button.clear"));
+            GridPane studentFields = new GridPane();
+            studentFields.setHgap((double)10.0F);
+            studentFields.setVgap((double)8.0F);
+            this.addRequiredRow(studentFields, 0, this.lang.get("form.name"), name);
+            this.addRequiredRow(studentFields, 1, this.lang.get("form.index"), index);
+            this.addRequiredRow(studentFields, 2, this.lang.get("form.email"), email);
+            this.addRequiredRow(studentFields, 3, this.lang.get("form.phone"), phone);
+            this.addRequiredRow(studentFields, 4, this.lang.get("form.municipality"), municipality);
+            this.addRequiredRow(studentFields, 5, this.lang.get("form.faculty"), faculty);
+            this.addRequiredRow(studentFields, 6, this.lang.get("form.program"), program);
+            this.addRow(studentFields, 7, this.lang.get("form.year"), year);
+            this.addRow(studentFields, 8, this.lang.get("form.ects"), ects);
+            this.addRow(studentFields, 9, this.lang.get("form.gender"), new HBox((double)15.0F, new Node[]{male, female}));
+            GridPane scholarshipFields = new GridPane();
+            scholarshipFields.setHgap((double)10.0F);
+            scholarshipFields.setVgap((double)8.0F);
+            this.addRequiredRow(scholarshipFields, 0, this.lang.get("form.average"), average);
+            this.addRequiredRow(scholarshipFields, 1, this.lang.get("form.income"), income);
+            this.addRow(scholarshipFields, 2, this.lang.get("form.household"), household);
+            this.addRequiredRow(scholarshipFields, 3, this.lang.get("form.category"), category);
+            this.addRequiredRow(scholarshipFields, 4, this.lang.get("form.type"), type);
+            this.addRequiredRow(scholarshipFields, 5, this.lang.get("form.cycle"), cycle);
+            this.addRequiredRow(scholarshipFields, 6, this.lang.get("form.eligibility"), new VBox((double)8.0F, new Node[]{activeStudent, noOtherScholarship}));
+            this.addRequiredRow(scholarshipFields, 7, this.lang.get("form.checklist"), new VBox((double)8.0F, new Node[]{identityDoc, transcriptDoc, incomeDoc, studentDoc, documents}));
+            this.addRow(scholarshipFields, 8, this.lang.get("form.note"), note);
+            scholarshipFields.add(new HBox((double)12.0F, new Node[]{save, clear}), 1, 9);
+            VBox grid = new VBox((double)10.0F, new Node[]{this.group(this.lang.get("form.studentGroup"), studentFields), this.group(this.lang.get("form.scholarshipGroup"), scholarshipFields)});
+            grid.setPadding(new Insets((double)14.0F));
+            grid.getStyleClass().add("card");
+            this.setTabOrder(List.of(name, index, email, phone, municipality, faculty, program, year.getEditor(), ects.getEditor(), male, female, average, income, household.getEditor(), category, type, cycle, activeStudent, noOtherScholarship, identityDoc, transcriptDoc, incomeDoc, studentDoc, documents, note, save, clear));
+            save.setOnAction((e) -> {
+                try {
+                    this.clearFieldErrors();
+                    this.validate(name, index, email, phone, municipality, faculty, program, average, income, category, type, cycle, activeStudent, noOtherScholarship, identityDoc, transcriptDoc, incomeDoc, studentDoc, documents);
+                    if (this.repository.existsByIndexNumber(index.getText().trim())) {
+                        this.showFieldError(index, this.lang.get("validation.duplicateIndex"));
+                        index.requestFocus();
+                        return;
+                    }
+
+                    double avg = Double.parseDouble(average.getText().trim());
+                    double inc = Double.parseDouble(income.getText().trim());
+                    double score = this.scoringService.calculateScore(avg, inc, (Integer)year.getValue());
+                    ScholarshipApplication app = new ScholarshipApplication();
+                    app.setStudentName(name.getText().trim());
+                    app.setIndexNumber(index.getText().trim());
+                    app.setFaculty((String)faculty.getValue());
+                    app.setStudyProgram((String)program.getValue());
+                    app.setStudyYear((Integer)year.getValue());
+                    app.setAverageGrade(avg);
+                    app.setFamilyIncome(inc);
+                    app.setScholarshipType((String)type.getValue());
+                    app.setEmail(email.getText().trim());
+                    app.setPhone(phone.getText().trim());
+                    app.setMunicipality((String)municipality.getValue());
+                    app.setEctsCredits((Integer)ects.getValue());
+                    app.setHouseholdMembers((Integer)household.getValue());
+                    app.setSpecialCategory((String)category.getValue());
+                    app.setScholarshipCycle((String)cycle.getValue());
+                    app.setMotivation(note.getText().trim());
+                    app.setDocumentSummary(this.documentSummary(identityDoc, transcriptDoc, incomeDoc, studentDoc));
+                    app.setStatus("Pending");
+                    app.setGender(male.isSelected() ? "Male" : "Female");
+                    app.setDocumentsConfirmed(documents.isSelected());
+                    app.setAiScore(score);
+                    app.setAiRecommendation(this.scoringService.recommendation(score, inc));
+                    this.repository.save(app);
+                    String var10001 = this.lang.get("msg.saved");
+                    String var10002 = this.lang.get("msg.savedDetails");
+                    this.showInfo(var10001, var10002 + "\n" + this.lang.get("msg.priority") + " " + score + " - " + app.getAiRecommendation());
+                    this.statusBar.setText(this.lang.get("status.saved"));
+                    if (this.currentRole == MainApp.UserRole.STUDENT) {
+                        this.root.setCenter(this.createStudentHomeView());
+                    } else {
+                        this.showApplicationsTable();
+                    }
+                } catch (Exception ex) {
+                    this.statusBar.setText(ex.getMessage() == null ? this.lang.get("msg.error") : ex.getMessage());
+                }
+
+            });
+            clear.setOnAction((e) -> {
+                this.clearFieldErrors();
+                name.clear();
+                index.clear();
+                email.clear();
+                phone.clear();
+                municipality.setValue((Object)null);
+                faculty.setValue((Object)null);
+                phone.setText("+383");
+                program.setItems(FXCollections.observableArrayList());
+                program.setValue((Object)null);
+                program.setDisable(true);
+                average.clear();
+                income.clear();
+                type.setValue((Object)null);
+                category.setValue((Object)null);
+                cycle.setValue((Object)null);
+                activeStudent.setSelected(false);
+                noOtherScholarship.setSelected(false);
+                documents.setSelected(false);
+                identityDoc.setSelected(false);
+                transcriptDoc.setSelected(false);
+                incomeDoc.setSelected(false);
+                studentDoc.setSelected(false);
+                note.clear();
+            });
+            ScrollPane formScroll = new ScrollPane(grid);
+            formScroll.setFitToWidth(true);
+            formScroll.setPannable(true);
+            formScroll.getStyleClass().add("page-scroll");
+            BorderPane page = this.createPage(this.lang.get("page.apply"), formScroll);
+            this.root.setCenter(page);
+            this.statusBar.setText(this.lang.get("status.apply"));
+        }
     }
 
     private void showApplicationsTable() {showApplicationsTable("");}
@@ -576,7 +746,41 @@ public class MainApp extends Application {
     }
 
     private Map<String, List<String>> studyPrograms() {
-        return null;
+        Map<String, List<String>> programs = new LinkedHashMap();
+        programs.put("UP - Fakulteti Filozofik", List.of("Filozofi", "Sociologji", "Psikologji", "Histori", "Shkenca Politike"));
+        programs.put("UP - Fakulteti i Shkencave Matematike-Natyrore", List.of("Matematike", "Shkenca Kompjuterike", "Fizike", "Kimi", "Biologji", "Gjeografi"));
+        programs.put("UP - Fakulteti i Filologjise", List.of("Gjuhe dhe Letersi Shqipe", "Gjuhe Angleze", "Gjuhe Gjermane", "Gjuhe Frënge", "Gazetari"));
+        programs.put("UP - Fakulteti Juridik", List.of("Juridik i Pergjithshem"));
+        programs.put("UP - Fakulteti Ekonomik", List.of("Banka dhe Financa", "Menaxhment", "Marketing", "Kontabilitet", "Ekonomi e Aplikuar"));
+        programs.put("UP - Fakulteti i Inxhinierise se Ndertimit", List.of("Ndertimtari", "Hidroteknike", "Gjeodezi"));
+        programs.put("UP - Fakulteti i Inxhinierise Elektrike dhe Kompjuterike", List.of("Inxhinieri Kompjuterike dhe Softuerike", "Elektronike, Automatike dhe Robotike", "Teknologji e Informacionit dhe Komunikimit", "Elektroenergjetike"));
+        programs.put("UP - Fakulteti i Inxhinierise Mekanike", List.of("Konstruksione dhe Mekanizim", "Termoenergjetike", "Komunikacion", "Mekatronike"));
+        programs.put("UP - Fakulteti i Mjekesise", List.of("Mjekesi e Pergjithshme", "Stomatologji", "Farmaci", "Fizioterapi", "Infermieristikë"));
+        programs.put("UP - Fakulteti i Arteve", List.of("Art Figurativ", "Art Muzikor", "Art Dramatik"));
+        programs.put("UP - Fakulteti i Bujqesise dhe Veterinarise", List.of("Bujqesi", "Veterinari", "Teknologji Ushqimore", "Ekonomi e Bujqesise"));
+        programs.put("UP - Fakulteti i Shkencave Sportive", List.of("Edukim Fizik dhe Sport", "Trajner Sportiv"));
+        programs.put("UP - Fakulteti i Edukimit", List.of("Edukim Fillor", "Edukim Parashkollor", "Pedagogji"));
+        programs.put("UP - Fakulteti i Arkitektures", List.of("Arkitekture"));
+        programs.put("UPZ - Fakulteti i Shkencave Kompjuterike", List.of("Shkenca Kompjuterike", "Teknologji Informacioni dhe Telekomunikim"));
+        programs.put("UPZ - Fakulteti Ekonomik", List.of("Administrim Biznesi", "Menaxhment Nderkombetar"));
+        programs.put("UPZ - Fakulteti Juridik", List.of("Juridik"));
+        programs.put("UPZ - Fakulteti i Edukimit", List.of("Edukim Fillor", "Edukim Parashkollor"));
+        programs.put("UPZ - Fakulteti i Filologjise", List.of("Gjuhe Shqipe", "Gjuhe Angleze", "Gjuhe Gjermane"));
+        programs.put("UPZ - Fakulteti i Shkencave te Jetes dhe Mjedisit", List.of("Agrobiznes", "Shkenca Pyjore dhe Mjedisore"));
+        programs.put("UKZ - Fakulteti i Shkencave Kompjuterike", List.of("Shkenca Kompjuterike", "Inxhinieri Softuerike"));
+        programs.put("UKZ - Fakulteti Ekonomik", List.of("Banka, Financa dhe Kontabilitet", "Menaxhment"));
+        programs.put("UKZ - Fakulteti Juridik", List.of("Juridik"));
+        programs.put("UKZ - Fakulteti i Edukimit", List.of("Edukim Fillor", "Edukim Parashkollor"));
+        programs.put("UKZ - Fakulteti i Shkencave Aplikative", List.of("Inxhinieri Industriale", "Menaxhim i Resurseve"));
+        programs.put("UHZ - Fakulteti i Biznesit", List.of("Administrim Biznesi", "Banka dhe Financa", "Kontabilitet"));
+        programs.put("UHZ - Fakulteti Juridik", List.of("Juridik"));
+        programs.put("UHZ - Fakulteti i Menaxhimit ne Turizem, Hoteleri dhe Mjedis", List.of("Turizem dhe Hoteleri", "Menaxhim Mjedisor"));
+        programs.put("UHZ - Fakulteti i Agrobiznesit", List.of("Agrobiznes", "Teknologji Ushqimore"));
+        programs.put("UMIB - Fakulteti i Gjeoshkencave", List.of("Gjeologji", "Miniera", "Materiale dhe Metalurgji"));
+        programs.put("UMIB - Fakulteti i Inxhinierise Mekanike dhe Kompjuterike", List.of("Inxhinieri Mekanike", "Inxhinieri Kompjuterike"));
+        programs.put("UMIB - Fakulteti Ekonomik", List.of("Menaxhment", "Financa"));
+        programs.put("UASF - Fakulteti i Inxhinierise dhe Informatikes", List.of("Informatike e Aplikuar", "Inxhinieri Industriale", "Dizajn Grafik dhe Multimedia"));
+        return programs;
     }
 
     private BorderPane createPage(String title, javafx.scene.Node content) {
@@ -726,6 +930,71 @@ public class MainApp extends Application {
                           ComboBox<String> category, ComboBox<String> type, ComboBox<String> cycle, CheckBox activeStudent,
                           CheckBox noOtherScholarship, CheckBox identityDoc, CheckBox transcriptDoc, CheckBox incomeDoc,
                           CheckBox studentDoc, CheckBox documents) {
+        boolean valid = true;
+        valid &= this.requireText(name);
+        valid &= this.requireText(index);
+        valid &= this.requireText(email);
+        valid &= this.requireText(phone);
+        valid &= this.requireCombo(municipality);
+        valid &= this.requireCombo(faculty);
+        valid &= this.requireCombo(program);
+        valid &= this.requireText(average);
+        valid &= this.requireText(income);
+        valid &= this.requireCombo(category);
+        valid &= this.requireCombo(type);
+        valid &= this.requireCombo(cycle);
+        if (!name.getText().isBlank() && !name.getText().trim().contains(" ")) {
+            this.showFieldError(name, this.lang.get("validation.fullName"));
+            valid = false;
+        }
+
+        if (!index.getText().isBlank() && !index.getText().trim().matches("[A-Za-z0-9/-]{4,20}")) {
+            this.showFieldError(index, this.lang.get("validation.index"));
+            valid = false;
+        }
+
+        if (!email.getText().isBlank() && !email.getText().trim().matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) {
+            this.showFieldError(email, this.lang.get("validation.email"));
+            valid = false;
+        }
+
+        if (!phone.getText().trim().matches("\\+383[0-9 ]{6,15}")) {
+            this.showFieldError(phone, this.lang.get("validation.phone"));
+            valid = false;
+        }
+
+        double avg = this.parseDoubleOrMark(average, this.lang.get("validation.number"));
+        double inc = this.parseDoubleOrMark(income, this.lang.get("validation.number"));
+        if (!average.getText().isBlank() && (avg < (double)8.0F || avg > (double)10.0F)) {
+            this.showFieldError(average, this.lang.get("validation.average"));
+            valid = false;
+        }
+
+        if (!income.getText().isBlank() && inc < (double)0.0F) {
+            this.showFieldError(income, this.lang.get("validation.income"));
+            valid = false;
+        }
+
+        if (!activeStudent.isSelected() || !noOtherScholarship.isSelected()) {
+            Parent var10001 = activeStudent.getParent();
+            String var10002 = this.lang.get("validation.activeStudent");
+            this.showFieldError(var10001, var10002 + " " + this.lang.get("validation.noOtherScholarship"));
+            valid = false;
+        }
+
+        if (!identityDoc.isSelected() || !transcriptDoc.isSelected() || !incomeDoc.isSelected() || !studentDoc.isSelected()) {
+            this.showFieldError(identityDoc.getParent(), this.lang.get("validation.checklist"));
+            valid = false;
+        }
+
+        if (!documents.isSelected()) {
+            this.showFieldError(identityDoc.getParent(), this.lang.get("validation.documents"));
+            valid = false;
+        }
+
+        if (!valid) {
+            throw new IllegalArgumentException(this.lang.get("validation.inlineSummary"));
+        }
     }
 
     private String documentSummary(CheckBox identityDoc, CheckBox transcriptDoc, CheckBox incomeDoc, CheckBox studentDoc) {
