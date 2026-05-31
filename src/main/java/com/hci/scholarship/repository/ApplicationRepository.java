@@ -136,69 +136,6 @@ public class ApplicationRepository {
         return result;
     }
 
-    public List<ScholarshipApplication> findAll() throws SQLException {
-        return search("");
-    }
-
-    public List<ScholarshipApplication> topPending(int limit) throws SQLException {
-        List<ScholarshipApplication> list = new ArrayList<>();
-        String sql = "SELECT * FROM scholarship_applications WHERE status='Pending' ORDER BY ai_score DESC, family_income ASC LIMIT ?";
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, limit);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(map(rs));
-            }
-        }
-        return list;
-    }
-    public List<ScholarshipApplication> search(String keyword) throws SQLException {
-        List<ScholarshipApplication> list = new ArrayList<>();
-        String sql = """
-                SELECT * FROM scholarship_applications
-                WHERE student_name LIKE ? OR index_number LIKE ? OR faculty LIKE ? OR study_program LIKE ?
-                   OR scholarship_type LIKE ? OR scholarship_cycle LIKE ? OR special_category LIKE ?
-                   OR municipality LIKE ? OR status LIKE ?
-                ORDER BY
-                    CASE status WHEN 'Pending' THEN 0 WHEN 'Approved' THEN 1 ELSE 2 END,
-                    ai_score DESC,
-                    id DESC
-                """;
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            String query = "%" + keyword + "%";
-            for (int i = 1; i <= 9; i++) ps.setString(i, query);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(map(rs));
-            }
-        }
-        return list;
-    }
-    public int countByStatus(String status) throws SQLException {
-        try (Connection connection = Database.getConnection(); PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM scholarship_applications WHERE status=?")) {
-            ps.setString(1, status);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() ? rs.getInt(1) : 0;
-            }
-        }
-    }
-    public int countAll() throws SQLException {
-        try (Connection connection = Database.getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM scholarship_applications")) {
-            return rs.next() ? rs.getInt(1) : 0;
-        }
-    }
-
-    public double averageScore() throws SQLException {
-        try (Connection connection = Database.getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT AVG(ai_score) FROM scholarship_applications")) {
-            return rs.next() ? Math.round(rs.getDouble(1) * 100.0) / 100.0 : 0;
-        }
-    }
-    public List<String[]> countByFaculty() throws SQLException {
-        List<String[]> result = new ArrayList<>();
-        String sql = "SELECT faculty, COUNT(*) AS total FROM scholarship_applications GROUP BY faculty";
-        try (Connection c = Database.getConnection(); Statement st = c.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) result.add(new String[]{rs.getString("faculty"), String.valueOf(rs.getInt("total"))});
-        }
-        return result;
-    }
     private ScholarshipApplication map(ResultSet rs) throws SQLException {
         return new ScholarshipApplication(
                 rs.getInt("id"),
@@ -225,7 +162,6 @@ public class ApplicationRepository {
                 rs.getString("ai_recommendation"),
                 rs.getDouble("ai_score"),
                 rs.getString("created_at")
-        );
         );
     }
 }
