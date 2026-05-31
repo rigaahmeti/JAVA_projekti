@@ -1049,15 +1049,41 @@ public class MainApp extends Application {
     }
 
     private void clearFieldErrors() {
+        for(Map.Entry<Node, Label> entry : this.fieldErrors.entrySet()) {
+            ((Label)entry.getValue()).setText("");
+            ((Label)entry.getValue()).setManaged(false);
+            ((Label)entry.getValue()).setVisible(false);
+            ((Node)entry.getKey()).getStyleClass().remove("input-error");
+        }
+
     }
 
     private void allowDecimalInput(TextField field) {
+        field.textProperty().addListener((ignored, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                field.setText(oldValue);
+            }
+
+        });
     }
 
     private void keepPhonePrefix(TextField phone) {
+        phone.textProperty().addListener((ignored, oldValue, newValue) -> {
+            String value = newValue == null ? "" : newValue;
+            if (!value.startsWith("+383")) {
+                phone.setText("+383");
+                phone.positionCaret(phone.getText().length());
+            } else {
+                if (!value.matches("\\+383[0-9 ]*")) {
+                    phone.setText(oldValue);
+                }
+
+            }
+        });
     }
 
-    private void addRow(GridPane grid, int row, String label, javafx.scene.Node node) {
+    private void addRow(GridPane grid, int row, String label, Node node) {
+        this.addFormRow(grid, row, label, node, false);
     }
 
     private void addRequiredRow(GridPane grid, int row, String label, javafx.scene.Node node) {
