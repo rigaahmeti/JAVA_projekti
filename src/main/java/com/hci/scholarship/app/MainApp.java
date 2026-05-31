@@ -267,7 +267,38 @@ public class MainApp extends Application {
     }
 
     private StackPane createLoginIllustration() {
-        return null;
+        Label title = new Label("SCHOLARSHIP");
+        title.getStyleClass().add("login-graphic-title");
+        Label subtitle = new Label("PORTAL");
+        subtitle.getStyleClass().add("login-graphic-subtitle");
+
+        Label university = new Label("U");
+        university.getStyleClass().add("login-icon-circle");
+        Label target = new Label("*");
+        target.getStyleClass().add("login-icon-circle");
+        Label money = new Label("$");
+        money.getStyleClass().add("login-icon-circle");
+        Label book = new Label("B");
+        book.getStyleClass().add("login-icon-circle");
+
+        HBox topIcons = new HBox(22, university, target);
+        topIcons.setAlignment(Pos.CENTER);
+        HBox bottomIcons = new HBox(22, book, money);
+        bottomIcons.setAlignment(Pos.CENTER);
+
+        Region lineOne = new Region();
+        lineOne.getStyleClass().add("login-graphic-line");
+        Region lineTwo = new Region();
+        lineTwo.getStyleClass().add("login-graphic-line");
+
+        VBox art = new VBox(12, topIcons, title, subtitle, lineOne, bottomIcons, lineTwo);
+        art.setAlignment(Pos.CENTER);
+        StackPane visual = new StackPane(art);
+        visual.getStyleClass().add("login-visual");
+        visual.setMinWidth(520);
+        visual.setPrefWidth(620);
+        visual.setMaxWidth(680);
+        return visual;
     }
 
     private BorderPane createStudentHomeView() {
