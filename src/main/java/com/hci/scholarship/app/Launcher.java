@@ -1,4 +1,4 @@
-﻿package com.hci.scholarship.app;
+package com.hci.scholarship.app;
 
 public class Launcher {
     public static void main(String[] args) {

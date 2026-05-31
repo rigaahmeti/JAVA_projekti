@@ -1,4 +1,4 @@
-﻿package com.hci.scholarship.db;
+package com.hci.scholarship.db;
 
 import com.hci.scholarship.repository.UserRepository;
 

@@ -1,4 +1,4 @@
-﻿package com.hci.scholarship.service;
+package com.hci.scholarship.service;
 
 public class ScoringService {
     public static final double MINIMUM_AVERAGE = 8.0;
