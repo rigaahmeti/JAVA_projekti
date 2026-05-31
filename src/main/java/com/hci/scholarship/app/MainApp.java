@@ -425,7 +425,15 @@ public class MainApp extends Application {
     }
 
     private BorderPane createPage(String title, javafx.scene.Node content) {
-        return null;
+        Label heading = new Label(title);
+        heading.getStyleClass().add("heading");
+        BorderPane pane = new BorderPane();
+        pane.setPadding(new Insets(14));
+        pane.getStyleClass().add("soft-page");
+        pane.setTop(heading);
+        BorderPane.setMargin(heading, new Insets(0, 0, 12, 0));
+        pane.setCenter(content);
+        return pane;
     }
 
     private void loadTable(String keyword) {
