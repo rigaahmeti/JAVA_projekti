@@ -1,4 +1,4 @@
-﻿package com.hci.scholarship.app;
+package com.hci.scholarship.app;
 
 import app.SessionManager;
 import com.hci.scholarship.db.Database;
@@ -15,8 +15,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -27,7 +25,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
@@ -395,251 +392,246 @@ public class MainApp extends Application {
     }
 
     private void showApplicationForm() {
-        {
-            this.fieldErrors = new LinkedHashMap();
-            TextField name = new TextField();
-            TextField index = new TextField();
-            TextField email = new TextField();
-            TextField phone = new TextField();
-            phone.setText("+383");
-            phone.setPromptText("+383 XX XXX XXX");
-            this.keepPhonePrefix(phone);
-            ComboBox<String> municipality = new ComboBox(FXCollections.observableArrayList(new String[]{"Prishtine", "Prizren", "Peje", "Gjakove", "Gjilan", "Ferizaj", "Mitrovice", "Podujeve", "Vushtrri", "Suhareke", "Rahovec", "Other"}));
-            ComboBox<String> faculty = new ComboBox(FXCollections.observableArrayList(this.studyPrograms().keySet()));
-            ComboBox<String> program = new ComboBox();
-            faculty.setMaxWidth(Double.MAX_VALUE);
-            program.setMaxWidth(Double.MAX_VALUE);
-            program.setDisable(true);
-            faculty.setPromptText(this.lang.get("form.chooseFaculty"));
-            program.setPromptText(this.lang.get("form.chooseProgram"));
-            faculty.setOnAction((e) -> {
-                program.setItems(FXCollections.observableArrayList((Collection)this.studyPrograms().getOrDefault(faculty.getValue(), List.of())));
-                program.setValue((Object)null);
-                program.setDisable(program.getItems().isEmpty());
-            });
-            Spinner<Integer> year = new Spinner(1, 5, 1);
-            Spinner<Integer> ects = new Spinner(0, 300, 60, 6);
-            TextField average = new TextField();
-            average.setPromptText("8.0 - 10.0");
-            this.allowDecimalInput(average);
-            TextField income = new TextField();
-            income.setPromptText("0.00");
-            this.allowDecimalInput(income);
-            Spinner<Integer> household = new Spinner(1, 15, 4);
-            ComboBox<String> category = new ComboBox(FXCollections.observableArrayList(new String[]{"General", "Low-income household", "Orphan support", "Disability support", "First-generation student", "Minority community", "Single-parent household"}));
-            ComboBox<String> cycle = new ComboBox(FXCollections.observableArrayList(new String[]{"Annual 2026/27", "Semester Fall 2026", "Semester Spring 2027", "Emergency support", "Mobility support"}));
-            ComboBox<String> type = new ComboBox(FXCollections.observableArrayList(new String[]{"Excellence and Need", "Merit Scholarship", "Social Support", "STEM Scholarship", "Research Project", "Sports Achievement", "Arts and Culture", "Women in STEM", "Mobility Grant", "Final-year Completion"}));
-            ToggleGroup genderGroup = new ToggleGroup();
-            RadioButton male = new RadioButton(this.lang.get("form.male"));
-            RadioButton female = new RadioButton(this.lang.get("form.female"));
-            male.setToggleGroup(genderGroup);
-            female.setToggleGroup(genderGroup);
-            male.setSelected(true);
-            CheckBox activeStudent = new CheckBox(this.lang.get("form.activeStudent"));
-            CheckBox noOtherScholarship = new CheckBox(this.lang.get("form.noOtherScholarship"));
-            CheckBox documents = new CheckBox(this.lang.get("form.documents"));
-            CheckBox identityDoc = new CheckBox(this.lang.get("form.identityDoc"));
-            CheckBox transcriptDoc = new CheckBox(this.lang.get("form.transcriptDoc"));
-            CheckBox incomeDoc = new CheckBox(this.lang.get("form.incomeDoc"));
-            CheckBox studentDoc = new CheckBox(this.lang.get("form.studentDoc"));
-            TextArea note = new TextArea();
-            note.setPromptText(this.lang.get("form.notePrompt"));
-            note.setPrefRowCount(3);
-            Button save = new Button(this.lang.get("button.save"));
-            save.setDefaultButton(true);
-            Button clear = new Button(this.lang.get("button.clear"));
-            GridPane studentFields = new GridPane();
-            studentFields.setHgap((double)10.0F);
-            studentFields.setVgap((double)8.0F);
-            this.addRequiredRow(studentFields, 0, this.lang.get("form.name"), name);
-            this.addRequiredRow(studentFields, 1, this.lang.get("form.index"), index);
-            this.addRequiredRow(studentFields, 2, this.lang.get("form.email"), email);
-            this.addRequiredRow(studentFields, 3, this.lang.get("form.phone"), phone);
-            this.addRequiredRow(studentFields, 4, this.lang.get("form.municipality"), municipality);
-            this.addRequiredRow(studentFields, 5, this.lang.get("form.faculty"), faculty);
-            this.addRequiredRow(studentFields, 6, this.lang.get("form.program"), program);
-            this.addRow(studentFields, 7, this.lang.get("form.year"), year);
-            this.addRow(studentFields, 8, this.lang.get("form.ects"), ects);
-            this.addRow(studentFields, 9, this.lang.get("form.gender"), new HBox((double)15.0F, new Node[]{male, female}));
-            GridPane scholarshipFields = new GridPane();
-            scholarshipFields.setHgap((double)10.0F);
-            scholarshipFields.setVgap((double)8.0F);
-            this.addRequiredRow(scholarshipFields, 0, this.lang.get("form.average"), average);
-            this.addRequiredRow(scholarshipFields, 1, this.lang.get("form.income"), income);
-            this.addRow(scholarshipFields, 2, this.lang.get("form.household"), household);
-            this.addRequiredRow(scholarshipFields, 3, this.lang.get("form.category"), category);
-            this.addRequiredRow(scholarshipFields, 4, this.lang.get("form.type"), type);
-            this.addRequiredRow(scholarshipFields, 5, this.lang.get("form.cycle"), cycle);
-            this.addRequiredRow(scholarshipFields, 6, this.lang.get("form.eligibility"), new VBox((double)8.0F, new Node[]{activeStudent, noOtherScholarship}));
-            this.addRequiredRow(scholarshipFields, 7, this.lang.get("form.checklist"), new VBox((double)8.0F, new Node[]{identityDoc, transcriptDoc, incomeDoc, studentDoc, documents}));
-            this.addRow(scholarshipFields, 8, this.lang.get("form.note"), note);
-            scholarshipFields.add(new HBox((double)12.0F, new Node[]{save, clear}), 1, 9);
-            VBox grid = new VBox((double)10.0F, new Node[]{this.group(this.lang.get("form.studentGroup"), studentFields), this.group(this.lang.get("form.scholarshipGroup"), scholarshipFields)});
-            grid.setPadding(new Insets((double)14.0F));
-            grid.getStyleClass().add("card");
-            this.setTabOrder(List.of(name, index, email, phone, municipality, faculty, program, year.getEditor(), ects.getEditor(), male, female, average, income, household.getEditor(), category, type, cycle, activeStudent, noOtherScholarship, identityDoc, transcriptDoc, incomeDoc, studentDoc, documents, note, save, clear));
-            save.setOnAction((e) -> {
-                try {
-                    this.clearFieldErrors();
-                    this.validate(name, index, email, phone, municipality, faculty, program, average, income, category, type, cycle, activeStudent, noOtherScholarship, identityDoc, transcriptDoc, incomeDoc, studentDoc, documents);
-                    if (this.repository.existsByIndexNumber(index.getText().trim())) {
-                        this.showFieldError(index, this.lang.get("validation.duplicateIndex"));
-                        index.requestFocus();
-                        return;
-                    }
+        fieldErrors = new LinkedHashMap<>();
+        TextField name = new TextField();
+        TextField index = new TextField();
+        TextField email = new TextField();
+        TextField phone = new TextField();
+        phone.setText("+383");
+        phone.setPromptText("+383 XX XXX XXX");
+        keepPhonePrefix(phone);
+        ComboBox<String> municipality = new ComboBox<>(FXCollections.observableArrayList(
+                "Prishtine", "Prizren", "Peje", "Gjakove", "Gjilan", "Ferizaj", "Mitrovice", "Podujeve", "Vushtrri", "Suhareke", "Rahovec", "Other"));
+        ComboBox<String> faculty = new ComboBox<>(FXCollections.observableArrayList(studyPrograms().keySet()));
+        ComboBox<String> program = new ComboBox<>();
+        faculty.setMaxWidth(Double.MAX_VALUE);
+        program.setMaxWidth(Double.MAX_VALUE);
+        program.setDisable(true);
+        faculty.setPromptText(lang.get("form.chooseFaculty"));
+        program.setPromptText(lang.get("form.chooseProgram"));
+        faculty.setOnAction(e -> {
+            program.setItems(FXCollections.observableArrayList(studyPrograms().getOrDefault(faculty.getValue(), List.of())));
+            program.setValue(null);
+            program.setDisable(program.getItems().isEmpty());
+        });
+        Spinner<Integer> year = new Spinner<>(1, 5, 1);
+        Spinner<Integer> ects = new Spinner<>(0, 300, 60, 6);
+        TextField average = new TextField();
+        average.setPromptText("8.0 - 10.0");
+        allowDecimalInput(average);
+        TextField income = new TextField();
+        income.setPromptText("0.00");
+        allowDecimalInput(income);
+        Spinner<Integer> household = new Spinner<>(1, 15, 4);
+        ComboBox<String> category = new ComboBox<>(FXCollections.observableArrayList(
+                "General", "Low-income household", "Orphan support", "Disability support", "First-generation student", "Minority community", "Single-parent household"));
+        ComboBox<String> cycle = new ComboBox<>(FXCollections.observableArrayList(
+                "Annual 2026/27", "Semester Fall 2026", "Semester Spring 2027", "Emergency support", "Mobility support"));
+        ComboBox<String> type = new ComboBox<>(FXCollections.observableArrayList(
+                "Excellence and Need", "Merit Scholarship", "Social Support", "STEM Scholarship", "Research Project",
+                "Sports Achievement", "Arts and Culture", "Women in STEM", "Mobility Grant", "Final-year Completion"));
+        ToggleGroup genderGroup = new ToggleGroup();
+        RadioButton male = new RadioButton(lang.get("form.male"));
+        RadioButton female = new RadioButton(lang.get("form.female"));
+        male.setToggleGroup(genderGroup); female.setToggleGroup(genderGroup); male.setSelected(true);
+        CheckBox activeStudent = new CheckBox(lang.get("form.activeStudent"));
+        CheckBox noOtherScholarship = new CheckBox(lang.get("form.noOtherScholarship"));
+        CheckBox documents = new CheckBox(lang.get("form.documents"));
+        CheckBox identityDoc = new CheckBox(lang.get("form.identityDoc"));
+        CheckBox transcriptDoc = new CheckBox(lang.get("form.transcriptDoc"));
+        CheckBox incomeDoc = new CheckBox(lang.get("form.incomeDoc"));
+        CheckBox studentDoc = new CheckBox(lang.get("form.studentDoc"));
+        TextArea note = new TextArea();
+        note.setPromptText(lang.get("form.notePrompt"));
+        note.setPrefRowCount(3);
 
-                    double avg = Double.parseDouble(average.getText().trim());
-                    double inc = Double.parseDouble(income.getText().trim());
-                    double score = this.scoringService.calculateScore(avg, inc, (Integer)year.getValue());
-                    ScholarshipApplication app = new ScholarshipApplication();
-                    app.setStudentName(name.getText().trim());
-                    app.setIndexNumber(index.getText().trim());
-                    app.setFaculty((String)faculty.getValue());
-                    app.setStudyProgram((String)program.getValue());
-                    app.setStudyYear((Integer)year.getValue());
-                    app.setAverageGrade(avg);
-                    app.setFamilyIncome(inc);
-                    app.setScholarshipType((String)type.getValue());
-                    app.setEmail(email.getText().trim());
-                    app.setPhone(phone.getText().trim());
-                    app.setMunicipality((String)municipality.getValue());
-                    app.setEctsCredits((Integer)ects.getValue());
-                    app.setHouseholdMembers((Integer)household.getValue());
-                    app.setSpecialCategory((String)category.getValue());
-                    app.setScholarshipCycle((String)cycle.getValue());
-                    app.setMotivation(note.getText().trim());
-                    app.setDocumentSummary(this.documentSummary(identityDoc, transcriptDoc, incomeDoc, studentDoc));
-                    app.setStatus("Pending");
-                    app.setGender(male.isSelected() ? "Male" : "Female");
-                    app.setDocumentsConfirmed(documents.isSelected());
-                    app.setAiScore(score);
-                    app.setAiRecommendation(this.scoringService.recommendation(score, inc));
-                    this.repository.save(app);
-                    String var10001 = this.lang.get("msg.saved");
-                    String var10002 = this.lang.get("msg.savedDetails");
-                    this.showInfo(var10001, var10002 + "\n" + this.lang.get("msg.priority") + " " + score + " - " + app.getAiRecommendation());
-                    this.statusBar.setText(this.lang.get("status.saved"));
-                    if (this.currentRole == MainApp.UserRole.STUDENT) {
-                        this.root.setCenter(this.createStudentHomeView());
-                    } else {
-                        this.showApplicationsTable();
-                    }
-                } catch (Exception ex) {
-                    this.statusBar.setText(ex.getMessage() == null ? this.lang.get("msg.error") : ex.getMessage());
+        Button save = new Button(lang.get("button.save"));
+        save.setDefaultButton(true);
+        Button clear = new Button(lang.get("button.clear"));
+
+        GridPane studentFields = new GridPane();
+        studentFields.setHgap(10);
+        studentFields.setVgap(8);
+        addRequiredRow(studentFields, 0, lang.get("form.name"), name);
+        addRequiredRow(studentFields, 1, lang.get("form.index"), index);
+        addRequiredRow(studentFields, 2, lang.get("form.email"), email);
+        addRequiredRow(studentFields, 3, lang.get("form.phone"), phone);
+        addRequiredRow(studentFields, 4, lang.get("form.municipality"), municipality);
+        addRequiredRow(studentFields, 5, lang.get("form.faculty"), faculty);
+        addRequiredRow(studentFields, 6, lang.get("form.program"), program);
+        addRow(studentFields, 7, lang.get("form.year"), year);
+        addRow(studentFields, 8, lang.get("form.ects"), ects);
+        addRow(studentFields, 9, lang.get("form.gender"), new HBox(15, male, female));
+
+        GridPane scholarshipFields = new GridPane();
+        scholarshipFields.setHgap(10);
+        scholarshipFields.setVgap(8);
+        addRequiredRow(scholarshipFields, 0, lang.get("form.average"), average);
+        addRequiredRow(scholarshipFields, 1, lang.get("form.income"), income);
+        addRow(scholarshipFields, 2, lang.get("form.household"), household);
+        addRequiredRow(scholarshipFields, 3, lang.get("form.category"), category);
+        addRequiredRow(scholarshipFields, 4, lang.get("form.type"), type);
+        addRequiredRow(scholarshipFields, 5, lang.get("form.cycle"), cycle);
+        addRequiredRow(scholarshipFields, 6, lang.get("form.eligibility"), new VBox(8, activeStudent, noOtherScholarship));
+        addRequiredRow(scholarshipFields, 7, lang.get("form.checklist"), new VBox(8, identityDoc, transcriptDoc, incomeDoc, studentDoc, documents));
+        addRow(scholarshipFields, 8, lang.get("form.note"), note);
+        scholarshipFields.add(new HBox(12, save, clear), 1, 9);
+
+        VBox grid = new VBox(10,
+                group(lang.get("form.studentGroup"), studentFields),
+                group(lang.get("form.scholarshipGroup"), scholarshipFields));
+        grid.setPadding(new Insets(14));
+        grid.getStyleClass().add("card");
+
+        setTabOrder(List.of(name, index, email, phone, municipality, faculty, program, year.getEditor(), ects.getEditor(),
+                male, female, average, income, household.getEditor(), category, type, cycle, activeStudent,
+                noOtherScholarship, identityDoc, transcriptDoc, incomeDoc, studentDoc, documents, note, save, clear));
+
+        save.setOnAction(e -> {
+            try {
+                clearFieldErrors();
+                validate(name, index, email, phone, municipality, faculty, program, average, income, category, type, cycle,
+                        activeStudent, noOtherScholarship, identityDoc, transcriptDoc, incomeDoc, studentDoc, documents);
+                if (repository.existsByIndexNumber(index.getText().trim())) {
+                    showFieldError(index, lang.get("validation.duplicateIndex"));
+                    index.requestFocus();
+                    return;
                 }
+                double avg = Double.parseDouble(average.getText().trim());
+                double inc = Double.parseDouble(income.getText().trim());
+                double score = scoringService.calculateScore(avg, inc, year.getValue());
+                ScholarshipApplication app = new ScholarshipApplication();
+                app.setStudentName(name.getText().trim());
+                app.setIndexNumber(index.getText().trim());
+                app.setFaculty(faculty.getValue());
+                app.setStudyProgram(program.getValue());
+                app.setStudyYear(year.getValue());
+                app.setAverageGrade(avg);
+                app.setFamilyIncome(inc);
+                app.setScholarshipType(type.getValue());
+                app.setEmail(email.getText().trim());
+                app.setPhone(phone.getText().trim());
+                app.setMunicipality(municipality.getValue());
+                app.setEctsCredits(ects.getValue());
+                app.setHouseholdMembers(household.getValue());
+                app.setSpecialCategory(category.getValue());
+                app.setScholarshipCycle(cycle.getValue());
+                app.setMotivation(note.getText().trim());
+                app.setDocumentSummary(documentSummary(identityDoc, transcriptDoc, incomeDoc, studentDoc));
+                app.setStatus("Pending");
+                app.setGender(male.isSelected() ? "Male" : "Female");
+                app.setDocumentsConfirmed(documents.isSelected());
+                app.setAiScore(score);
+                app.setAiRecommendation(scoringService.recommendation(score, inc));
+                repository.save(app);
+                showInfo(lang.get("msg.saved"), lang.get("msg.savedDetails") + "\n"
+                        + lang.get("msg.priority") + " " + score + " - " + app.getAiRecommendation());
+                statusBar.setText(lang.get("status.saved"));
+                if (currentRole == UserRole.STUDENT) {
+                    root.setCenter(createStudentHomeView());
+                } else {
+                    showApplicationsTable();
+                }
+            } catch (Exception ex) {
+                statusBar.setText(ex.getMessage() == null ? lang.get("msg.error") : ex.getMessage());
+            }
+        });
 
-            });
-            clear.setOnAction((e) -> {
-                this.clearFieldErrors();
-                name.clear();
-                index.clear();
-                email.clear();
-                phone.clear();
-                municipality.setValue((Object)null);
-                faculty.setValue((Object)null);
-                phone.setText("+383");
-                program.setItems(FXCollections.observableArrayList());
-                program.setValue((Object)null);
-                program.setDisable(true);
-                average.clear();
-                income.clear();
-                type.setValue((Object)null);
-                category.setValue((Object)null);
-                cycle.setValue((Object)null);
-                activeStudent.setSelected(false);
-                noOtherScholarship.setSelected(false);
-                documents.setSelected(false);
-                identityDoc.setSelected(false);
-                transcriptDoc.setSelected(false);
-                incomeDoc.setSelected(false);
-                studentDoc.setSelected(false);
-                note.clear();
-            });
-            ScrollPane formScroll = new ScrollPane(grid);
-            formScroll.setFitToWidth(true);
-            formScroll.setPannable(true);
-            formScroll.getStyleClass().add("page-scroll");
-            BorderPane page = this.createPage(this.lang.get("page.apply"), formScroll);
-            this.root.setCenter(page);
-            this.statusBar.setText(this.lang.get("status.apply"));
-        }
+        clear.setOnAction(e -> {
+            clearFieldErrors();
+            name.clear(); index.clear(); email.clear(); phone.clear(); municipality.setValue(null); faculty.setValue(null);
+            phone.setText("+383");
+            program.setItems(FXCollections.observableArrayList()); program.setValue(null); program.setDisable(true);
+            average.clear(); income.clear(); type.setValue(null); category.setValue(null); cycle.setValue(null);
+            activeStudent.setSelected(false); noOtherScholarship.setSelected(false); documents.setSelected(false);
+            identityDoc.setSelected(false); transcriptDoc.setSelected(false); incomeDoc.setSelected(false); studentDoc.setSelected(false); note.clear();
+        });
+
+        ScrollPane formScroll = new ScrollPane(grid);
+        formScroll.setFitToWidth(true);
+        formScroll.setPannable(true);
+        formScroll.getStyleClass().add("page-scroll");
+        BorderPane page = createPage(lang.get("page.apply"), formScroll);
+        root.setCenter(page);
+        statusBar.setText(lang.get("status.apply"));
     }
 
-    private void showApplicationsTable() {showApplicationsTable("");}
-
+    private void showApplicationsTable() {
+        showApplicationsTable("");
+    }
 
     private void showApplicationsTable(String initialFilter) {
-            table = new TableView<>();
-            table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-            TableColumn<ScholarshipApplication, Number> id = new TableColumn<>("ID");
-            id.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()));
-            TableColumn<ScholarshipApplication, String> name = new TableColumn<>(lang.get("table.name"));
-            name.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudentName()));
-            TableColumn<ScholarshipApplication, String> index = new TableColumn<>(lang.get("table.index"));
-            index.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIndexNumber()));
-            TableColumn<ScholarshipApplication, String> faculty = new TableColumn<>(lang.get("table.faculty"));
-            faculty.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFaculty()));
-            TableColumn<ScholarshipApplication, String> type = new TableColumn<>(lang.get("table.type"));
-            type.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getScholarshipType()));
-            TableColumn<ScholarshipApplication, String> program = new TableColumn<>(lang.get("table.program"));
-            program.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudyProgram()));
-            TableColumn<ScholarshipApplication, String> cycle = new TableColumn<>(lang.get("table.cycle"));
-            cycle.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getScholarshipCycle()));
-            TableColumn<ScholarshipApplication, Number> year = new TableColumn<>(lang.get("table.year"));
-            year.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getStudyYear()));
-            TableColumn<ScholarshipApplication, Number> average = new TableColumn<>(lang.get("table.average"));
-            average.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getAverageGrade()));
-            TableColumn<ScholarshipApplication, Number> income = new TableColumn<>(lang.get("table.income"));
-            income.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getFamilyIncome()));
-            TableColumn<ScholarshipApplication, String> status = new TableColumn<>(lang.get("table.status"));
-            status.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
-            TableColumn<ScholarshipApplication, Number> score = new TableColumn<>("AI Score");
-            score.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getAiScore()));
-            TableColumn<ScholarshipApplication, String> rec = new TableColumn<>(lang.get("table.recommendation"));
-            rec.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAiRecommendation()));
-            table.getColumns().addAll(id, name, index, faculty, program, type, cycle, year, average, income, status, score, rec);
+        table = new TableView<>();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        TableColumn<ScholarshipApplication, Number> id = new TableColumn<>("ID");
+        id.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()));
+        TableColumn<ScholarshipApplication, String> name = new TableColumn<>(lang.get("table.name"));
+        name.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudentName()));
+        TableColumn<ScholarshipApplication, String> index = new TableColumn<>(lang.get("table.index"));
+        index.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIndexNumber()));
+        TableColumn<ScholarshipApplication, String> faculty = new TableColumn<>(lang.get("table.faculty"));
+        faculty.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFaculty()));
+        TableColumn<ScholarshipApplication, String> type = new TableColumn<>(lang.get("table.type"));
+        type.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getScholarshipType()));
+        TableColumn<ScholarshipApplication, String> program = new TableColumn<>(lang.get("table.program"));
+        program.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudyProgram()));
+        TableColumn<ScholarshipApplication, String> cycle = new TableColumn<>(lang.get("table.cycle"));
+        cycle.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getScholarshipCycle()));
+        TableColumn<ScholarshipApplication, Number> year = new TableColumn<>(lang.get("table.year"));
+        year.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getStudyYear()));
+        TableColumn<ScholarshipApplication, Number> average = new TableColumn<>(lang.get("table.average"));
+        average.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getAverageGrade()));
+        TableColumn<ScholarshipApplication, Number> income = new TableColumn<>(lang.get("table.income"));
+        income.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getFamilyIncome()));
+        TableColumn<ScholarshipApplication, String> status = new TableColumn<>(lang.get("table.status"));
+        status.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
+        TableColumn<ScholarshipApplication, Number> score = new TableColumn<>("AI Score");
+        score.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().getAiScore()));
+        TableColumn<ScholarshipApplication, String> rec = new TableColumn<>(lang.get("table.recommendation"));
+        rec.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAiRecommendation()));
+        table.getColumns().addAll(id, name, index, faculty, program, type, cycle, year, average, income, status, score, rec);
 
-            TextField search = new TextField();
-            search.setPromptText(lang.get("table.search"));
-            search.setText(initialFilter);
-            search.setOnAction(e -> loadTable(search.getText()));
-            Button searchBtn = new Button(lang.get("button.search"));
-            Button refresh = new Button(lang.get("button.refresh"));
-            Button approve = new Button(lang.get("button.approve"));
-            Button reject = new Button(lang.get("button.reject"));
-            Button details = new Button(lang.get("button.details"));
-            Button delete = new Button(lang.get("button.delete"));
-            HBox actions = new HBox(10, search, searchBtn, refresh, details, approve, reject, delete);
-            actions.setAlignment(Pos.CENTER_LEFT);
+        TextField search = new TextField();
+        search.setPromptText(lang.get("table.search"));
+        search.setText(initialFilter);
+        search.setOnAction(e -> loadTable(search.getText()));
+        Button searchBtn = new Button(lang.get("button.search"));
+        Button refresh = new Button(lang.get("button.refresh"));
+        Button approve = new Button(lang.get("button.approve"));
+        Button reject = new Button(lang.get("button.reject"));
+        Button details = new Button(lang.get("button.details"));
+        Button delete = new Button(lang.get("button.delete"));
+        HBox actions = new HBox(10, search, searchBtn, refresh, details, approve, reject, delete);
+        actions.setAlignment(Pos.CENTER_LEFT);
 
-            searchBtn.setOnAction(e -> loadTable(search.getText()));
-            refresh.setOnAction(e -> loadTable(""));
-            approve.setOnAction(e -> changeSelectedStatus("Approved"));
-            reject.setOnAction(e -> changeSelectedStatus("Rejected"));
-            details.setOnAction(e -> showSelectedDetails());
-            delete.setOnAction(e -> deleteSelected());
+        searchBtn.setOnAction(e -> loadTable(search.getText()));
+        refresh.setOnAction(e -> loadTable(""));
+        approve.setOnAction(e -> changeSelectedStatus("Approved"));
+        reject.setOnAction(e -> changeSelectedStatus("Rejected"));
+        details.setOnAction(e -> showSelectedDetails());
+        delete.setOnAction(e -> deleteSelected());
 
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem approveItem = new MenuItem(lang.get("button.approve"));
-            approveItem.setOnAction(e -> changeSelectedStatus("Approved"));
-            MenuItem rejectItem = new MenuItem(lang.get("button.reject"));
-            rejectItem.setOnAction(e -> changeSelectedStatus("Rejected"));
-            MenuItem deleteItem = new MenuItem(lang.get("button.delete"));
-            deleteItem.setOnAction(e -> deleteSelected());
-            MenuItem detailsItem = new MenuItem(lang.get("button.details"));
-            detailsItem.setOnAction(e -> showSelectedDetails());
-            contextMenu.getItems().addAll(detailsItem, new SeparatorMenuItem(), approveItem, rejectItem, new SeparatorMenuItem(), deleteItem);
-            table.setContextMenu(contextMenu);
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem approveItem = new MenuItem(lang.get("button.approve"));
+        approveItem.setOnAction(e -> changeSelectedStatus("Approved"));
+        MenuItem rejectItem = new MenuItem(lang.get("button.reject"));
+        rejectItem.setOnAction(e -> changeSelectedStatus("Rejected"));
+        MenuItem deleteItem = new MenuItem(lang.get("button.delete"));
+        deleteItem.setOnAction(e -> deleteSelected());
+        MenuItem detailsItem = new MenuItem(lang.get("button.details"));
+        detailsItem.setOnAction(e -> showSelectedDetails());
+        contextMenu.getItems().addAll(detailsItem, new SeparatorMenuItem(), approveItem, rejectItem, new SeparatorMenuItem(), deleteItem);
+        table.setContextMenu(contextMenu);
 
-            VBox content = new VBox(12, actions, table);
-            content.setPadding(new Insets(20));
-            content.getStyleClass().add("card");
-            VBox.setVgrow(table, Priority.ALWAYS);
-            root.setCenter(createPage(lang.get("page.applications"), content));
-            setTabOrder(List.of(search, searchBtn, refresh, details, approve, reject, delete, table));
-            loadTable(initialFilter);
-            statusBar.setText(lang.get("status.table"));
-        }
+        VBox content = new VBox(12, actions, table);
+        content.setPadding(new Insets(20));
+        content.getStyleClass().add("card");
+        VBox.setVgrow(table, Priority.ALWAYS);
+        root.setCenter(createPage(lang.get("page.applications"), content));
+        setTabOrder(List.of(search, searchBtn, refresh, details, approve, reject, delete, table));
+        loadTable(initialFilter);
+        statusBar.setText(lang.get("status.table"));
+    }
 
     private BorderPane createDashboardView() {
         VBox wrapper = new VBox(18);
@@ -747,14 +739,18 @@ public class MainApp extends Application {
     }
 
     private Map<String, List<String>> studyPrograms() {
-        Map<String, List<String>> programs = new LinkedHashMap();
+        Map<String, List<String>> programs = new LinkedHashMap<>();
         programs.put("UP - Fakulteti Filozofik", List.of("Filozofi", "Sociologji", "Psikologji", "Histori", "Shkenca Politike"));
         programs.put("UP - Fakulteti i Shkencave Matematike-Natyrore", List.of("Matematike", "Shkenca Kompjuterike", "Fizike", "Kimi", "Biologji", "Gjeografi"));
         programs.put("UP - Fakulteti i Filologjise", List.of("Gjuhe dhe Letersi Shqipe", "Gjuhe Angleze", "Gjuhe Gjermane", "Gjuhe Frënge", "Gazetari"));
         programs.put("UP - Fakulteti Juridik", List.of("Juridik i Pergjithshem"));
         programs.put("UP - Fakulteti Ekonomik", List.of("Banka dhe Financa", "Menaxhment", "Marketing", "Kontabilitet", "Ekonomi e Aplikuar"));
         programs.put("UP - Fakulteti i Inxhinierise se Ndertimit", List.of("Ndertimtari", "Hidroteknike", "Gjeodezi"));
-        programs.put("UP - Fakulteti i Inxhinierise Elektrike dhe Kompjuterike", List.of("Inxhinieri Kompjuterike dhe Softuerike", "Elektronike, Automatike dhe Robotike", "Teknologji e Informacionit dhe Komunikimit", "Elektroenergjetike"));
+        programs.put("UP - Fakulteti i Inxhinierise Elektrike dhe Kompjuterike", List.of(
+                "Inxhinieri Kompjuterike dhe Softuerike",
+                "Elektronike, Automatike dhe Robotike",
+                "Teknologji e Informacionit dhe Komunikimit",
+                "Elektroenergjetike"));
         programs.put("UP - Fakulteti i Inxhinierise Mekanike", List.of("Konstruksione dhe Mekanizim", "Termoenergjetike", "Komunikacion", "Mekatronike"));
         programs.put("UP - Fakulteti i Mjekesise", List.of("Mjekesi e Pergjithshme", "Stomatologji", "Farmaci", "Fizioterapi", "Infermieristikë"));
         programs.put("UP - Fakulteti i Arteve", List.of("Art Figurativ", "Art Muzikor", "Art Dramatik"));
@@ -762,21 +758,25 @@ public class MainApp extends Application {
         programs.put("UP - Fakulteti i Shkencave Sportive", List.of("Edukim Fizik dhe Sport", "Trajner Sportiv"));
         programs.put("UP - Fakulteti i Edukimit", List.of("Edukim Fillor", "Edukim Parashkollor", "Pedagogji"));
         programs.put("UP - Fakulteti i Arkitektures", List.of("Arkitekture"));
+
         programs.put("UPZ - Fakulteti i Shkencave Kompjuterike", List.of("Shkenca Kompjuterike", "Teknologji Informacioni dhe Telekomunikim"));
         programs.put("UPZ - Fakulteti Ekonomik", List.of("Administrim Biznesi", "Menaxhment Nderkombetar"));
         programs.put("UPZ - Fakulteti Juridik", List.of("Juridik"));
         programs.put("UPZ - Fakulteti i Edukimit", List.of("Edukim Fillor", "Edukim Parashkollor"));
         programs.put("UPZ - Fakulteti i Filologjise", List.of("Gjuhe Shqipe", "Gjuhe Angleze", "Gjuhe Gjermane"));
         programs.put("UPZ - Fakulteti i Shkencave te Jetes dhe Mjedisit", List.of("Agrobiznes", "Shkenca Pyjore dhe Mjedisore"));
+
         programs.put("UKZ - Fakulteti i Shkencave Kompjuterike", List.of("Shkenca Kompjuterike", "Inxhinieri Softuerike"));
         programs.put("UKZ - Fakulteti Ekonomik", List.of("Banka, Financa dhe Kontabilitet", "Menaxhment"));
         programs.put("UKZ - Fakulteti Juridik", List.of("Juridik"));
         programs.put("UKZ - Fakulteti i Edukimit", List.of("Edukim Fillor", "Edukim Parashkollor"));
         programs.put("UKZ - Fakulteti i Shkencave Aplikative", List.of("Inxhinieri Industriale", "Menaxhim i Resurseve"));
+
         programs.put("UHZ - Fakulteti i Biznesit", List.of("Administrim Biznesi", "Banka dhe Financa", "Kontabilitet"));
         programs.put("UHZ - Fakulteti Juridik", List.of("Juridik"));
         programs.put("UHZ - Fakulteti i Menaxhimit ne Turizem, Hoteleri dhe Mjedis", List.of("Turizem dhe Hoteleri", "Menaxhim Mjedisor"));
         programs.put("UHZ - Fakulteti i Agrobiznesit", List.of("Agrobiznes", "Teknologji Ushqimore"));
+
         programs.put("UMIB - Fakulteti i Gjeoshkencave", List.of("Gjeologji", "Miniera", "Materiale dhe Metalurgji"));
         programs.put("UMIB - Fakulteti i Inxhinierise Mekanike dhe Kompjuterike", List.of("Inxhinieri Mekanike", "Inxhinieri Kompjuterike"));
         programs.put("UMIB - Fakulteti Ekonomik", List.of("Menaxhment", "Financa"));
@@ -932,131 +932,115 @@ public class MainApp extends Application {
                           CheckBox noOtherScholarship, CheckBox identityDoc, CheckBox transcriptDoc, CheckBox incomeDoc,
                           CheckBox studentDoc, CheckBox documents) {
         boolean valid = true;
-        valid &= this.requireText(name);
-        valid &= this.requireText(index);
-        valid &= this.requireText(email);
-        valid &= this.requireText(phone);
-        valid &= this.requireCombo(municipality);
-        valid &= this.requireCombo(faculty);
-        valid &= this.requireCombo(program);
-        valid &= this.requireText(average);
-        valid &= this.requireText(income);
-        valid &= this.requireCombo(category);
-        valid &= this.requireCombo(type);
-        valid &= this.requireCombo(cycle);
+        valid &= requireText(name);
+        valid &= requireText(index);
+        valid &= requireText(email);
+        valid &= requireText(phone);
+        valid &= requireCombo(municipality);
+        valid &= requireCombo(faculty);
+        valid &= requireCombo(program);
+        valid &= requireText(average);
+        valid &= requireText(income);
+        valid &= requireCombo(category);
+        valid &= requireCombo(type);
+        valid &= requireCombo(cycle);
+
         if (!name.getText().isBlank() && !name.getText().trim().contains(" ")) {
-            this.showFieldError(name, this.lang.get("validation.fullName"));
+            showFieldError(name, lang.get("validation.fullName"));
             valid = false;
         }
-
         if (!index.getText().isBlank() && !index.getText().trim().matches("[A-Za-z0-9/-]{4,20}")) {
-            this.showFieldError(index, this.lang.get("validation.index"));
+            showFieldError(index, lang.get("validation.index"));
             valid = false;
         }
-
         if (!email.getText().isBlank() && !email.getText().trim().matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) {
-            this.showFieldError(email, this.lang.get("validation.email"));
+            showFieldError(email, lang.get("validation.email"));
             valid = false;
         }
-
         if (!phone.getText().trim().matches("\\+383[0-9 ]{6,15}")) {
-            this.showFieldError(phone, this.lang.get("validation.phone"));
+            showFieldError(phone, lang.get("validation.phone"));
             valid = false;
         }
-
-        double avg = this.parseDoubleOrMark(average, this.lang.get("validation.number"));
-        double inc = this.parseDoubleOrMark(income, this.lang.get("validation.number"));
-        if (!average.getText().isBlank() && (avg < (double)8.0F || avg > (double)10.0F)) {
-            this.showFieldError(average, this.lang.get("validation.average"));
+        double avg = parseDoubleOrMark(average, lang.get("validation.number"));
+        double inc = parseDoubleOrMark(income, lang.get("validation.number"));
+        if (!average.getText().isBlank() && (avg < ScoringService.MINIMUM_AVERAGE || avg > 10)) {
+            showFieldError(average, lang.get("validation.average"));
             valid = false;
         }
-
-        if (!income.getText().isBlank() && inc < (double)0.0F) {
-            this.showFieldError(income, this.lang.get("validation.income"));
+        if (!income.getText().isBlank() && inc < 0) {
+            showFieldError(income, lang.get("validation.income"));
             valid = false;
         }
-
         if (!activeStudent.isSelected() || !noOtherScholarship.isSelected()) {
-            Parent var10001 = activeStudent.getParent();
-            String var10002 = this.lang.get("validation.activeStudent");
-            this.showFieldError(var10001, var10002 + " " + this.lang.get("validation.noOtherScholarship"));
+            showFieldError(activeStudent.getParent(), lang.get("validation.activeStudent") + " " + lang.get("validation.noOtherScholarship"));
             valid = false;
         }
-
         if (!identityDoc.isSelected() || !transcriptDoc.isSelected() || !incomeDoc.isSelected() || !studentDoc.isSelected()) {
-            this.showFieldError(identityDoc.getParent(), this.lang.get("validation.checklist"));
+            showFieldError(identityDoc.getParent(), lang.get("validation.checklist"));
             valid = false;
         }
-
         if (!documents.isSelected()) {
-            this.showFieldError(identityDoc.getParent(), this.lang.get("validation.documents"));
+            showFieldError(identityDoc.getParent(), lang.get("validation.documents"));
             valid = false;
         }
-
-        if (!valid) {
-            throw new IllegalArgumentException(this.lang.get("validation.inlineSummary"));
-        }
+        if (!valid) throw new IllegalArgumentException(lang.get("validation.inlineSummary"));
     }
 
     private String documentSummary(CheckBox identityDoc, CheckBox transcriptDoc, CheckBox incomeDoc, CheckBox studentDoc) {
-        return String.join(", ", identityDoc.getText(), transcriptDoc.getText(), incomeDoc.getText(), studentDoc.getText());
+        return String.join(", ",
+                identityDoc.getText(),
+                transcriptDoc.getText(),
+                incomeDoc.getText(),
+                studentDoc.getText());
     }
 
     private boolean requireText(TextInputControl field) {
         if (field.getText().isBlank()) {
-            this.showFieldError(field, this.lang.get("validation.requiredField"));
+            showFieldError(field, lang.get("validation.requiredField"));
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     private boolean requireCombo(ComboBox<?> comboBox) {
         if (comboBox.getValue() == null) {
-            this.showFieldError(comboBox, this.lang.get("validation.requiredField"));
+            showFieldError(comboBox, lang.get("validation.requiredField"));
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     private double parseDoubleOrMark(TextField field, String message) {
-        if (field.getText().isBlank()) {
-            return (double)-1.0F;
-        } else {
-            try {
-                return Double.parseDouble(field.getText().trim());
-            } catch (NumberFormatException var4) {
-                this.showFieldError(field, message);
-                return (double)-1.0F;
-            }
+        if (field.getText().isBlank()) return -1;
+        try {
+            return Double.parseDouble(field.getText().trim());
+        } catch (NumberFormatException ex) {
+            showFieldError(field, message);
+            return -1;
         }
     }
 
     private void showFieldError(javafx.scene.Node field, String message) {
-        Label error = (Label)this.fieldErrors.get(field);
+        Label error = fieldErrors.get(field);
         if (error == null && field.getParent() != null) {
-            error = (Label)this.fieldErrors.get(field.getParent());
+            error = fieldErrors.get(field.getParent());
         }
-
         if (error != null) {
             error.setText(message);
             error.setManaged(true);
             error.setVisible(true);
         }
-
         field.getStyleClass().remove("input-error");
         field.getStyleClass().add("input-error");
     }
 
     private void clearFieldErrors() {
-        for(Map.Entry<Node, Label> entry : this.fieldErrors.entrySet()) {
-            ((Label)entry.getValue()).setText("");
-            ((Label)entry.getValue()).setManaged(false);
-            ((Label)entry.getValue()).setVisible(false);
-            ((Node)entry.getKey()).getStyleClass().remove("input-error");
+        for (Map.Entry<javafx.scene.Node, Label> entry : fieldErrors.entrySet()) {
+            entry.getValue().setText("");
+            entry.getValue().setManaged(false);
+            entry.getValue().setVisible(false);
+            entry.getKey().getStyleClass().remove("input-error");
         }
-
     }
 
     private void allowDecimalInput(TextField field) {
@@ -1064,7 +1048,6 @@ public class MainApp extends Application {
             if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 field.setText(oldValue);
             }
-
         });
     }
 
@@ -1074,38 +1057,34 @@ public class MainApp extends Application {
             if (!value.startsWith("+383")) {
                 phone.setText("+383");
                 phone.positionCaret(phone.getText().length());
-            } else {
-                if (!value.matches("\\+383[0-9 ]*")) {
-                    phone.setText(oldValue);
-                }
-
+                return;
+            }
+            if (!value.matches("\\+383[0-9 ]*")) {
+                phone.setText(oldValue);
             }
         });
     }
 
-    private void addRow(GridPane grid, int row, String label, Node node) {
-        this.addFormRow(grid, row, label, node, false);
+    private void addRow(GridPane grid, int row, String label, javafx.scene.Node node) {
+        addFormRow(grid, row, label, node, false);
     }
 
-    private void addRequiredRow(GridPane grid, int row, String label, Node node) {
-        this.addFormRow(grid, row, label, node, true);
+    private void addRequiredRow(GridPane grid, int row, String label, javafx.scene.Node node) {
+        addFormRow(grid, row, label, node, true);
     }
 
-    private void addFormRow(GridPane grid, int row, String label, Node node, boolean required) {
+    private void addFormRow(GridPane grid, int row, String label, javafx.scene.Node node, boolean required) {
         Label lbl = new Label(label);
-        if (required) {
-            lbl.setText(label + " *");
-        }
-
-        lbl.setMinWidth((double)135.0F);
+        if (required) lbl.setText(label + " *");
+        lbl.setMinWidth(135);
         Label error = new Label();
         error.getStyleClass().add("field-error");
         error.setManaged(false);
         error.setVisible(false);
-        VBox fieldBox = new VBox((double)4.0F, new Node[]{node, error});
+        VBox fieldBox = new VBox(4, node, error);
         grid.add(lbl, 0, row);
         grid.add(fieldBox, 1, row);
-        this.fieldErrors.put(node, error);
+        fieldErrors.put(node, error);
         GridPane.setHgrow(fieldBox, Priority.ALWAYS);
     }
 
@@ -1116,19 +1095,14 @@ public class MainApp extends Application {
         return pane;
     }
 
-    private void setTabOrder(List<Node> nodes) {
-        for(int i = 0; i < nodes.size(); ++i) {
-            Node current = (Node)nodes.get(i);
-            Node next = (Node)nodes.get((i + 1) % nodes.size());
-            current.addEventFilter(KeyEvent.KEY_PRESSED, (e) -> {
-                if (e.getCode() == KeyCode.TAB && !e.isShiftDown()) {
-                    next.requestFocus();
-                    e.consume();
-                }
-
+    private void setTabOrder(List<javafx.scene.Node> nodes) {
+        for (int i = 0; i < nodes.size(); i++) {
+            javafx.scene.Node current = nodes.get(i);
+            javafx.scene.Node next = nodes.get((i + 1) % nodes.size());
+            current.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
+                if (e.getCode() == KeyCode.TAB && !e.isShiftDown()) { next.requestFocus(); e.consume(); }
             });
         }
-
     }
 
     private void showInfo(String title, String message) {
@@ -1145,4 +1119,3 @@ public class MainApp extends Application {
         alert.showAndWait();
     }
 }
-

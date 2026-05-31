@@ -1,4 +1,4 @@
-﻿package com.hci.scholarship.service;
+package com.hci.scholarship.service;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

@@ -1,4 +1,4 @@
-﻿package app;
+package app;
 
 public class SessionManager {
     private static String currentUser;

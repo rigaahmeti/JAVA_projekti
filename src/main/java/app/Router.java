@@ -1,4 +1,4 @@
-﻿package app;
+package app;
 
 import com.hci.scholarship.app.MainApp;
 import javafx.stage.Stage;

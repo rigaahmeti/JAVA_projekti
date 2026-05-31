@@ -1,4 +1,4 @@
-﻿package com.hci.scholarship.model;
+package com.hci.scholarship.model;
 
 public class ScholarshipApplication {
     private int id;
