@@ -27,6 +27,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
@@ -1086,17 +1087,48 @@ public class MainApp extends Application {
         this.addFormRow(grid, row, label, node, false);
     }
 
-    private void addRequiredRow(GridPane grid, int row, String label, javafx.scene.Node node) {
+    private void addRequiredRow(GridPane grid, int row, String label, Node node) {
+        this.addFormRow(grid, row, label, node, true);
     }
 
-    private void addFormRow(GridPane grid, int row, String label, javafx.scene.Node node, boolean required) {
+    private void addFormRow(GridPane grid, int row, String label, Node node, boolean required) {
+        Label lbl = new Label(label);
+        if (required) {
+            lbl.setText(label + " *");
+        }
+
+        lbl.setMinWidth((double)135.0F);
+        Label error = new Label();
+        error.getStyleClass().add("field-error");
+        error.setManaged(false);
+        error.setVisible(false);
+        VBox fieldBox = new VBox((double)4.0F, new Node[]{node, error});
+        grid.add(lbl, 0, row);
+        grid.add(fieldBox, 1, row);
+        this.fieldErrors.put(node, error);
+        GridPane.setHgrow(fieldBox, Priority.ALWAYS);
     }
 
     private TitledPane group(String title, Region content) {
-        return null;
+        TitledPane pane = new TitledPane(title, content);
+        pane.setCollapsible(false);
+        pane.getStyleClass().add("form-group");
+        return pane;
     }
 
-    private void setTabOrder(List<javafx.scene.Node> nodes) {
+    private void setTabOrder(List<Node> nodes) {
+        for(int i = 0; i < nodes.size(); ++i) {
+            Node current = (Node)nodes.get(i);
+            Node next = (Node)nodes.get((i + 1) % nodes.size());
+            current.addEventFilter(KeyEvent.KEY_PRESSED, (e) -> {
+                if (e.getCode() == KeyCode.TAB && !e.isShiftDown()) {
+                    next.requestFocus();
+                    e.consume();
+                }
+
+            });
+        }
+
     }
 
     private void showInfo(String title, String message) {
