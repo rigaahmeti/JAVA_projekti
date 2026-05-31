@@ -449,6 +449,16 @@ public class MainApp extends Application {
     }
 
     private void showHelp() {
+        String content = currentRole == UserRole.STUDENT ? lang.get("help.studentContent") : lang.get("help.content");
+        TextArea help = new TextArea(content);
+        help.setWrapText(true);
+        help.setEditable(false);
+        help.setPrefSize(720, 420);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(lang.get("menu.help"));
+        alert.setHeaderText(lang.get("help.title"));
+        alert.getDialogPane().setContent(help);
+        alert.showAndWait();
     }
 
     private void showDatabaseWindow(Stage owner) {
@@ -506,9 +516,17 @@ public class MainApp extends Application {
     }
 
     private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.showAndWait();
     }
 
     private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.showAndWait();
     }
 }
 
