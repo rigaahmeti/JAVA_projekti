@@ -267,23 +267,121 @@ public class MainApp extends Application {
     }
 
     private StackPane createLoginIllustration() {
-        return null;
+        Label title = new Label("SCHOLARSHIP");
+        title.getStyleClass().add("login-graphic-title");
+        Label subtitle = new Label("PORTAL");
+        subtitle.getStyleClass().add("login-graphic-subtitle");
+
+        Label university = new Label("U");
+        university.getStyleClass().add("login-icon-circle");
+        Label target = new Label("*");
+        target.getStyleClass().add("login-icon-circle");
+        Label money = new Label("$");
+        money.getStyleClass().add("login-icon-circle");
+        Label book = new Label("B");
+        book.getStyleClass().add("login-icon-circle");
+
+        HBox topIcons = new HBox(22, university, target);
+        topIcons.setAlignment(Pos.CENTER);
+        HBox bottomIcons = new HBox(22, book, money);
+        bottomIcons.setAlignment(Pos.CENTER);
+
+        Region lineOne = new Region();
+        lineOne.getStyleClass().add("login-graphic-line");
+        Region lineTwo = new Region();
+        lineTwo.getStyleClass().add("login-graphic-line");
+
+        VBox art = new VBox(12, topIcons, title, subtitle, lineOne, bottomIcons, lineTwo);
+        art.setAlignment(Pos.CENTER);
+        StackPane visual = new StackPane(art);
+        visual.getStyleClass().add("login-visual");
+        visual.setMinWidth(520);
+        visual.setPrefWidth(620);
+        visual.setMaxWidth(680);
+        return visual;
     }
 
     private BorderPane createStudentHomeView() {
-        return null;
+        Label badge = new Label(lang.get("login.brand"));
+        badge.getStyleClass().add("hero-badge");
+        Label welcome = new Label(lang.get("student.title"));
+        welcome.getStyleClass().add("hero-title");
+        Button apply = new Button(lang.get("student.apply"));
+        apply.getStyleClass().add("hero-button");
+        apply.setOnAction(e -> showApplicationForm());
+        Button criteria = new Button(lang.get("student.criteria"));
+        criteria.getStyleClass().add("secondary-button");
+        criteria.setOnAction(e -> root.setCenter(createCriteriaView()));
+
+        VBox heroCopy = new VBox(16, badge, welcome, new HBox(12, apply, criteria));
+        heroCopy.setAlignment(Pos.CENTER_LEFT);
+        HBox hero = new HBox(26, heroCopy, createScholarshipIllustration());
+        hero.setAlignment(Pos.CENTER);
+        HBox.setHgrow(heroCopy, Priority.ALWAYS);
+        hero.getStyleClass().add("student-hero");
+
+        VBox content = new VBox(hero);
+        content.setPadding(new Insets(14));
+        content.getStyleClass().add("student-home");
+
+        BorderPane page = new BorderPane(content);
+        page.setPadding(new Insets(16));
+        return page;
     }
 
     private StackPane createScholarshipIllustration() {
-        return null;
+        Label cap = new Label("SCHOLARSHIP");
+        cap.getStyleClass().add("illustration-title");
+        Label icon = new Label("$");
+        icon.getStyleClass().add("illustration-coin");
+        Region book = new Region();
+        book.getStyleClass().add("illustration-book");
+        Region card = new Region();
+        card.getStyleClass().add("illustration-card");
+        VBox objects = new VBox(12, icon, book);
+        objects.setAlignment(Pos.CENTER);
+        StackPane illustration = new StackPane(card, objects, cap);
+        StackPane.setAlignment(cap, Pos.TOP_LEFT);
+        StackPane.setMargin(cap, new Insets(24, 0, 0, 26));
+        illustration.getStyleClass().add("scholarship-illustration");
+        illustration.setMinSize(330, 220);
+        illustration.setPrefSize(390, 250);
+        return illustration;
     }
 
     private BorderPane createCriteriaView() {
-        return null;
+        Label title = new Label(lang.get("criteria.title"));
+        title.getStyleClass().add("criteria-title");
+        Label lead = new Label(lang.get("criteria.description"));
+        lead.setWrapText(true);
+        lead.getStyleClass().add("criteria-lead");
+        VBox academic = criteriaSection(lang.get("criteria.academicTitle"), lang.get("criteria.academic"));
+        VBox financial = criteriaSection(lang.get("criteria.financialTitle"), lang.get("criteria.financial"));
+        VBox documents = criteriaSection(lang.get("criteria.documentsTitle"), lang.get("criteria.documents"));
+        VBox review = criteriaSection(lang.get("criteria.reviewTitle"), lang.get("criteria.review"));
+        Button apply = new Button(lang.get("student.apply"));
+        apply.setOnAction(e -> showApplicationForm());
+        TilePane grid = new TilePane(16, 16, academic, financial, documents, review);
+        grid.setPrefColumns(2);
+        grid.setMaxWidth(Double.MAX_VALUE);
+        VBox content = new VBox(18, title, lead, grid, apply);
+        content.setPadding(new Insets(32));
+        content.getStyleClass().add("criteria-page");
+        ScrollPane scroll = new ScrollPane(content);
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("page-scroll");
+        return createPage(lang.get("page.criteria"), scroll);
     }
 
     private VBox criteriaSection(String title, String text) {
-        return null;
+        Label heading = new Label(title);
+        heading.getStyleClass().add("criteria-section-title");
+        Label body = new Label(text);
+        body.setWrapText(true);
+        VBox section = new VBox(10, heading, body);
+        section.setPrefWidth(420);
+        section.getStyleClass().add("criteria-section");
+        return section;
     }
 
     private void logout(Stage stage) {
@@ -327,7 +425,15 @@ public class MainApp extends Application {
     }
 
     private BorderPane createPage(String title, javafx.scene.Node content) {
-        return null;
+        Label heading = new Label(title);
+        heading.getStyleClass().add("heading");
+        BorderPane pane = new BorderPane();
+        pane.setPadding(new Insets(14));
+        pane.getStyleClass().add("soft-page");
+        pane.setTop(heading);
+        BorderPane.setMargin(heading, new Insets(0, 0, 12, 0));
+        pane.setCenter(content);
+        return pane;
     }
 
     private void loadTable(String keyword) {
