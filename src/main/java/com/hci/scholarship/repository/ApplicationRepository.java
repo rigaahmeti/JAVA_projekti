@@ -180,3 +180,22 @@ public class ApplicationRepository {
             }
         }
     }
+    public int countAll() throws SQLException {
+        try (Connection connection = Database.getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM scholarship_applications")) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    public double averageScore() throws SQLException {
+        try (Connection connection = Database.getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT AVG(ai_score) FROM scholarship_applications")) {
+            return rs.next() ? Math.round(rs.getDouble(1) * 100.0) / 100.0 : 0;
+        }
+    }
+    public List<String[]> countByFaculty() throws SQLException {
+        List<String[]> result = new ArrayList<>();
+        String sql = "SELECT faculty, COUNT(*) AS total FROM scholarship_applications GROUP BY faculty";
+        try (Connection c = Database.getConnection(); Statement st = c.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) result.add(new String[]{rs.getString("faculty"), String.valueOf(rs.getInt("total"))});
+        }
+        return result;
+    }
